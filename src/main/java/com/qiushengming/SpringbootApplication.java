@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,
+@SpringBootApplication(exclude = {
         HibernateJpaAutoConfiguration.class,
         RedisAutoConfiguration.class,
         MongoAutoConfiguration.class,
