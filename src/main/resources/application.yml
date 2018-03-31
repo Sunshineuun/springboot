@@ -1,14 +1,16 @@
 # 系统配置
 server:
-  port: 8080
-
+  port: 80
+  tomcat:
+    uri-encoding: utf-8
+#debug: true
 logging:
   level:
-    ROOT: INFO
-    org.springframework.web.servlet: ERROR
-    com:
-      xncoding: DEBUG
-  file: E:/logs/app.log
+    # 增加mybatis日志打印sql
+    com.qiushengming.mapper: debug
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%thread]){faint} %clr(%-40.40logger{39}){cyan} %L %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+
 
 # spring配置
 spring:
@@ -46,16 +48,8 @@ spring:
       # 合并多个DruidDataSource的监控数据
       #useGlobalDataSourceStat: true
 
-# mybatis-plus配置
-mybatis-plus:
-  mapper-locations: classpath*:mapping/*.xml
-  typeAliasesPackage: com.qiushengming.entity
-  global-config:
-    id-type: 0  # 0:数据库ID自增  1:用户输入id  2:全局唯一id(IdWorker)  3:全局唯一ID(uuid)
-    db-column-underline: false
-    refresh-mapper: true
-  configuration:
-    map-underscore-to-camel-case: true
-    cache-enabled: true #配置的缓存的全局开关
-    lazyLoadingEnabled: true #延时加载的开关
-    multipleResultSetsEnabled: true #开启的话，延时加载一个属性时会加载该对象全部属性，否则按需加载属性
+minnie:
+  mybatis:
+    mapper-locations: classpath*:mapper/*.xml
+    typeAliasesPackage: com.qiushengming.entity
+    basePackage: com.qiushengming.mapper
