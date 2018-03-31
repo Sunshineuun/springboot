@@ -32,3 +32,6 @@
 2.1 MybatisTransactionConfig，sqlsession创建
 2.2 MyBatisMapperScannerConfig，提供扫描mapper接口
 3. 完成用户新增
+4. 集成redis
+5. redis缓存更新策略。//TODO
+总结：mybatis，redis需要进阶了解。
