@@ -19,3 +19,16 @@
 2.2 maven的mybatis插件安装。完成。
 2.3 进行配置，配置文件最好引用properties文件。 ing
 3. 集成阿里的数据源
+
+### 0331
+1. mybatis-generator运行错误
+```
+[ERROR] Failed to execute goal org.mybatis.generator:mybatis-generator-maven-plugin:1.3.2:generate 
+(default-cli) on project springboot: CLIENT_PLUGIN_AUTH is required -> [Help 1]
+```
+原因未知；但是将generatorConfig.xml中的mysql驱动改为`5.1.30`就能正常使用了。
+此处将`5.1.30`版本的mysql驱动放大`\resources\static`下
+2. 配置mybatis
+2.1 MybatisTransactionConfig，sqlsession创建
+2.2 MyBatisMapperScannerConfig，提供扫描mapper接口
+3. 完成用户新增
