@@ -5,6 +5,9 @@ import com.qiushengming.entity.UserExample;
 import com.qiushengming.mapper.UserMapper;
 import com.qiushengming.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +17,7 @@ import java.util.List;
  * @date 18年03月31日
  */
 @Service(value = "userService")
+@CacheConfig(cacheNames = "user")
 public class UserServiceImpl implements UserService{
 
     @Autowired
@@ -37,9 +41,19 @@ public class UserServiceImpl implements UserService{
      * @return 用户实体
      */
     @Override
+    @Cacheable(value = "user", key="#name")
     public User findUserName(String name) {
         UserExample example = new UserExample();
         example.createCriteria().andNameEqualTo(name);
         return mapper.selectByExample(example).get(0);
     }
+
+    @Override
+    @CachePut(value = "user",key = "#user.name")
+    public int update(User user) {
+        UserExample example = new UserExample();
+        example.createCriteria().andNameEqualTo(user.getName());
+        return mapper.updateByExample(user, example);
+    }
+
 }
