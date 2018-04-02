@@ -35,3 +35,13 @@
 4. 集成redis
 5. redis缓存更新策略。//TODO
 总结：mybatis，redis需要进阶了解。
+
+
+### 0402
+1. 在使用springboot redis注解方式的缓存。使用`Cacheable`,`CachePut`时，缓存的都是return的结果。 <br>
+1.1 @Cacheable：缓存切入点，key不存在，存储到缓存中；key存在则取出数据。缓存方法返回结果。<br> 
+1.2 @CachePut：更新切入点，key不存在，存储到缓存中；key存在则更新数据。缓存方法返回结果。<br> 
+1.3 @CacheEvict：清除切入点，根据key删除缓存。<br> 
+1.3.1 allEntries：删除所有缓存 <br> 
+
+2. redis分布式管理
