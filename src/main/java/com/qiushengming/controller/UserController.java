@@ -22,7 +22,7 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("/addUser")
-    public MinNieResponse<Integer> add(String username, String sex, int age) {
+    public MinNieResponse<Integer> add(String username, String sex, String age) {
         User user = new User();
         user.setName(username);
         user.setSex(sex);
@@ -48,7 +48,7 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("/update")
-    public int update(User user) {
+    public User update(User user) {
         return service.update(user);
     }
 }

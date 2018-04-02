@@ -50,10 +50,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @CachePut(value = "user",key = "#user.name")
-    public int update(User user) {
+    public User update(User user) {
         UserExample example = new UserExample();
         example.createCriteria().andNameEqualTo(user.getName());
-        return mapper.updateByExample(user, example);
+        return user;
     }
 
 }

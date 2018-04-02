@@ -24,11 +24,11 @@ public class User extends BaseEntity {
         this.sex = sex == null ? null : sex.trim();
     }
 
-    public Integer getAge() {
-        return Integer.valueOf(age);
+    public String getAge() {
+        return age;
     }
 
-    public void setAge(Integer age) {
-        this.age = age.toString();
+    public void setAge(String age) {
+        this.age = age;
     }
 }
