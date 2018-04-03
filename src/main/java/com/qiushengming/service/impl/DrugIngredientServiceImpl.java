@@ -5,6 +5,7 @@ import com.qiushengming.entity.DrugIngredientExample;
 import com.qiushengming.mapper.DrugIngredientMapper;
 import com.qiushengming.service.DrugIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @date 2018年4月3日
  */
 @Service(value = "drugIngredientService")
+@CacheConfig(cacheNames = "drugIngredient")
 public class DrugIngredientServiceImpl
     implements DrugIngredientService {
 
@@ -30,9 +32,10 @@ public class DrugIngredientServiceImpl
     }
 
     @Override
-    public List<DrugIngredient> findDrugIngredientByLikeName(String likeName) {
+    @Cacheable(value = "drugIngredient", key = "#name")
+    public List<DrugIngredient> findDrugIngredientByLikeName(String name) {
         DrugIngredientExample ex = new DrugIngredientExample();
-        ex.createCriteria().andNameLike(likeName + "%");
+        ex.createCriteria().andNameLike(name + "%");
         return mapper.selectByExample(ex);
     }
 }
