@@ -27,4 +27,9 @@ public class BaseEntity implements Serializable {
     public void setId(String id) {
         this.id = id == null ? null : id.trim();
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
