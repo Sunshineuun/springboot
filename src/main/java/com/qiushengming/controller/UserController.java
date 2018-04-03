@@ -3,21 +3,22 @@ package com.qiushengming.controller;
 import com.qiushengming.entity.MinNieResponse;
 import com.qiushengming.entity.User;
 import com.qiushengming.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
  * <p>作者: qiushengming</p>
  * <p>日期: 2018/3/31</p>
+ * @author MinMin
  */
 @RestController
 public class UserController {
 
-    @Autowired
+    @Resource(name = "userService")
     private UserService service;
 
     @ResponseBody
