@@ -17,10 +17,10 @@ spring:
   profiles:
       active: dev
   datasource:
-      url: jdbc:mysql://192.168.16.113:3306/sunshine?useUnicode=true&characterEncoding=utf-8&useSSL=false
-      username: root
-      password: 123
-      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:oracle:thin:@192.168.16.113:1521:sunshine # jdbc:mysql://localhost:3306/sunshine?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      username: luun
+      password: luun # 192.168.16.113-123；localhost-minnie
+      driver-class-name: oracle.jdbc.driver.OracleDriver # com.mysql.jdbc.Driver
       platform: mysql
       type: com.alibaba.druid.pool.DruidDataSource
       # 下面为连接池的补充设置，应用到上面所有数据源中
@@ -34,7 +34,7 @@ spring:
       timeBetweenEvictionRunsMillis: 60000
       # 配置一个连接在池中最小生存的时间，单位是毫秒
       minEvictableIdleTimeMillis: 30000
-      validationQuery: select 'x'
+      validationQuery: select 'x' FROM dual
       testWhileIdle: true
       testOnBorrow: false
       testOnReturn: false
@@ -48,7 +48,7 @@ spring:
       # 合并多个DruidDataSource的监控数据
       useGlobalDataSourceStat: true
   redis:
-    database: 0
+    database: 1
     host: 192.168.5.94
     port: 6379
     password:
