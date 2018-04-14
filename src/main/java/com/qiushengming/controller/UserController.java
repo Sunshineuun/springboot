@@ -50,6 +50,6 @@ public class UserController {
     @ResponseBody
     @RequestMapping("/update")
     public User update(User user) {
-        return service.update(user);
+        return new User();
     }
 }
