@@ -69,10 +69,10 @@ spring:
     # 连接超时时间（毫秒数）
     timeout: 5000
 
-minnie:
-  mybatis:
+mybatis:
     mapper-locations: classpath*:mapper/*.xml
     typeAliasesPackage: com.qiushengming.entity
+minnie:
+  mybatis:
     basePackage: com.qiushengming.mapper
-
 
