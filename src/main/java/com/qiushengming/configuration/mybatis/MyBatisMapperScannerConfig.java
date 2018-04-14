@@ -1,4 +1,4 @@
-package com.qiushengming.configuration;
+package com.qiushengming.configuration.mybatis;
 
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.beans.factory.annotation.Value;
