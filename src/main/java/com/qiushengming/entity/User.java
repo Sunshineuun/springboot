@@ -1,5 +1,11 @@
 package com.qiushengming.entity;
 
+import com.qiushengming.annotation.Table;
+
+/**
+ * @author MinMin
+ */
+@Table(value = "MM_USER", resultMapId = "User")
 public class User extends BaseEntity {
 
     private String name;
