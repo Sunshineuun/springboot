@@ -10,16 +10,15 @@ import java.util.List;
  */
 public interface BaseService<T extends BaseEntity> {
     /**
-     *
-     * @param clazz class
+     * 获取所有数据
      * @return 结果集
      */
-    List<BaseEntity> getAll(Class<T> clazz);
+    List<T> getAll();
 
     /**
      * 持久化对象
      * @param o 被持久化的对象
      * @return 失败返回0;成功返回1
      */
-    int add(BaseEntity o);
+    int add(T o);
 }
