@@ -3,6 +3,7 @@ package com.qiushengming.service.impl;
 import com.qiushengming.dao.MinnieDao;
 import com.qiushengming.entity.BaseEntity;
 import com.qiushengming.service.BaseService;
+import com.qiushengming.utils.GenericsUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,14 +18,27 @@ public abstract class BaseServiceImpl<T extends BaseEntity>
     @Resource
     private MinnieDao dao;
 
+    private Class entityClass;
+
+    protected MinnieDao getDao() {
+        return dao;
+    }
+
+    protected Class getEntityClass() {
+        if (entityClass == null) {
+            entityClass =
+                GenericsUtils.getSuperClassGenricType(this.getClass());
+        }
+        return entityClass;
+    }
+
 
     /**
-     * @param clazz class
      * @return 结果集
      */
     @Override
-    public List getAll(Class clazz) {
-        return dao.getAll(clazz);
+    public List getAll() {
+        return getDao().getAll(getEntityClass());
     }
 
     /**
@@ -35,6 +49,6 @@ public abstract class BaseServiceImpl<T extends BaseEntity>
      */
     @Override
     public int add(BaseEntity o) {
-        return dao.add(o);
+        return getDao().add(o);
     }
 }
