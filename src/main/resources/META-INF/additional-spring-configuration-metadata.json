@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "minnie.mybatis.mapper-locations",
+      "type": "java.lang.String",
+      "description": "Description for minnie.mybatis.mapper-locations."
+    },
+    {
+      "name": "minnie.mybatis.typeAliasesPackage",
+      "type": "java.lang.String",
+      "description": "Description for minnie.mybatis.typeAliasesPackage."
+    },
+    {
+      "name": "minnie.mybatis.basePackage",
+      "type": "java.lang.String",
+      "description": "Description for minnie.mybatis.basePackage."
+    }
+  ] }

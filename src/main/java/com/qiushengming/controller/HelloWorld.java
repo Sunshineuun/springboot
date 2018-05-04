@@ -1,20 +1,18 @@
 package com.qiushengming.controller;
 
 import com.qiushengming.dao.MinnieDao;
-import com.qiushengming.entity.City;
 import com.qiushengming.mq.MQProducer;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  *
  * @author qiushengming
  * @date 2018/3/29
  */
-@RestController(value = "hello")
+@Controller(value = "hello")
 public class HelloWorld {
 
     @Resource
@@ -35,8 +33,18 @@ public class HelloWorld {
         }
     }
 
-    @RequestMapping("/findAllCity")
-    public List<City> findAllCity() {
-        return dao.getAll(City.class);
+    @RequestMapping("/book")
+    public String books() {
+        return "/book/index";
+    }
+
+    @RequestMapping("/book/history")
+    public String bookhistory() {
+        return "/book/history";
+    }
+
+    @RequestMapping("/index")
+    public String index() {
+        return "index";
     }
 }

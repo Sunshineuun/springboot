@@ -1,7 +1,7 @@
 package com.qiushengming.entity;
 
-import com.google.gson.Gson;
 import com.qiushengming.annotation.Id;
+import com.qiushengming.utils.Json;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -23,8 +23,6 @@ public class BaseEntity implements Serializable {
      */
     private String id = UUID.randomUUID().toString();
 
-    private final Gson gson = new Gson();
-
     @Id(value = "ID")
     public String getId() {
         return id;
@@ -36,6 +34,6 @@ public class BaseEntity implements Serializable {
 
     @Override
     public String toString() {
-        return gson.toJson(this);
+        return Json.toJson(this);
     }
 }

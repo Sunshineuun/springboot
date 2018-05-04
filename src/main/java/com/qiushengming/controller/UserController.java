@@ -23,16 +23,16 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("/addUser")
-    public MinNieResponse<Integer> add(String username, String sex, String age) {
+    public MinNieResponse add(String username, String sex, String age) {
         User user = new User();
         user.setName(username);
         user.setSex(sex);
         user.setAge(age);
         Integer result = service.add(user);
         if (result > 0) {
-            return new MinNieResponse<>(true, "新增成功", result);
+            return new MinNieResponse(true, "新增成功", result);
         }
-        return new MinNieResponse<>(false, "新增失败", result);
+        return new MinNieResponse(false, "新增失败", result);
     }
 
     @ResponseBody

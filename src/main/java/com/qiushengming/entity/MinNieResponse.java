@@ -6,7 +6,7 @@ package com.qiushengming.entity;
  * <p>日期: 2018/3/31</p>
  * @author MinMin
  */
-public class MinNieResponse<T> {
+public class MinNieResponse {
     /**
      * 是否成功
      */
@@ -20,13 +20,13 @@ public class MinNieResponse<T> {
     /**
      * 返回数据
      */
-    private T data;
+    private Object data;
 
     public MinNieResponse() {
 
     }
 
-    public MinNieResponse(boolean success, String msg, T data) {
+    public MinNieResponse(boolean success, String msg, Object data) {
         this.success = success;
         this.msg = msg;
         this.data = data;
@@ -48,11 +48,11 @@ public class MinNieResponse<T> {
         this.msg = msg;
     }
 
-    public T getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(Object data) {
         this.data = data;
     }
 

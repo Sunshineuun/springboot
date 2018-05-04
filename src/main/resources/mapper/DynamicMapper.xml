@@ -20,6 +20,6 @@
     </insert>
 
     <delete id="deleteStatement" parameterType="hashmap">
-        ${sql}
+        ${_sql}
     </delete>
 </mapper>
