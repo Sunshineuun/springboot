@@ -35,7 +35,8 @@ public class ObjectSessionImpl
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    public ObjectSessionImpl(@Qualifier(value = "sqlSessionTemplate") SqlSession sqlSession) {
+    public ObjectSessionImpl(
+        @Qualifier(value = "sqlSessionTemplate") SqlSession sqlSession) {
         super(sqlSession);
     }
 
@@ -90,9 +91,11 @@ public class ObjectSessionImpl
     @Override
     public <T> List<T> getAll(Class<T> clazz) {
         ClassMap classMap = AnnotationConfiguration.getClassMap(clazz);
-        return this.getSqlSession()
-            .selectList(StatementKeyGenerator.generateSelectStatementKey(clazz),
-                MapUtils.newMap(SQL, classMap.getSelectSql()));
+        String statement =
+            StatementKeyGenerator.generateSelectStatementKey(clazz);
+        Map<Object, Object> params =
+            MapUtils.newMap(SQL, classMap.getSelectSql());
+        return this.getSqlSession().selectList(statement, params);
     }
 
     @Override
@@ -214,7 +217,8 @@ public class ObjectSessionImpl
             return new HashMap<>(0);
         }
 
-        Map<String, Object> values = new HashMap<>(criteria.getConditions().size());
+        Map<String, Object> values =
+            new HashMap<>(criteria.getConditions().size());
         Condition condition;
         String fieldName;
         for (int i = 0; i < criteria.getConditions().size(); i++) {
@@ -296,7 +300,8 @@ public class ObjectSessionImpl
             return 0;
         }
 
-        return this.executeInsertDynamic(classMap.getInsertSql(), getValueMap(obj));
+        return this.executeInsertDynamic(classMap.getInsertSql(),
+            getValueMap(obj));
     }
 
     private int doUpdate(Object obj) {
@@ -305,7 +310,8 @@ public class ObjectSessionImpl
             logger.error("对象{}缺少Table注解！", obj.getClass().getName());
             return 0;
         }
-        return this.executeUpdateDynamic(classMap.getUpdateSql(), getValueMap(obj));
+        return this.executeUpdateDynamic(classMap.getUpdateSql(),
+            getValueMap(obj));
     }
 
     @SuppressWarnings("unchecked")
