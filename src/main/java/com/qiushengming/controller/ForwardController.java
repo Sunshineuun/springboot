@@ -24,7 +24,7 @@ public class ForwardController {
 
         logger.info("当前请求的基地址：{}，uri：{}", contextPath, requestURI);
 
-        String ctx = contextPath + "/forward/";
+        String ctx = contextPath + "/forward";
         String path =
             requestURI.substring(requestURI.indexOf(ctx) + ctx.length());
 
