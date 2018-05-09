@@ -21,4 +21,9 @@ public class BookController {
     public MinNieResponse getBooks() {
         return new MinNieResponse(true, "success", service.getAll());
     }
+
+    @RequestMapping("/getHistoryBook")
+    public MinNieResponse getHistoryBook() {
+        return new MinNieResponse(true, "success", service.getHistoryBook());
+    }
 }

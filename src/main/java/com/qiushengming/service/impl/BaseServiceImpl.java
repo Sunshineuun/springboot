@@ -20,15 +20,16 @@ public abstract class BaseServiceImpl<T extends BaseEntity>
 
     private Class entityClass;
 
-    protected MinnieDao getDao() {
+    MinnieDao getDao() {
         return dao;
     }
 
-    protected Class getEntityClass() {
+    private Class getEntityClass() {
         if (entityClass == null) {
             entityClass =
                 GenericsUtils.getSuperClassGenricType(this.getClass());
         }
+
         return entityClass;
     }
 

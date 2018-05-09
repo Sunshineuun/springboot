@@ -32,19 +32,4 @@ public class HelloWorld {
             producer.send(d, msg);
         }
     }
-
-    @RequestMapping("/book")
-    public String books() {
-        return "/book/index";
-    }
-
-    @RequestMapping("/book/history")
-    public String bookhistory() {
-        return "/book/history";
-    }
-
-    @RequestMapping("/index")
-    public String index() {
-        return "index";
-    }
 }

@@ -6,13 +6,15 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author qiushengming
  * @date 2018/4/14
  */
 @Component
-public class MinnieDaoImpl implements MinnieDao {
+public class MinnieDaoImpl
+    implements MinnieDao {
 
     @Resource(name = "objectSession")
     private ObjectSession session;
@@ -37,6 +39,23 @@ public class MinnieDaoImpl implements MinnieDao {
     @Override
     public <T> List<T> getAll(Class<T> clazz) {
         return session.getAll(clazz);
+    }
+
+    @Override
+    public <K, V> List<Map<K, V>> queryBySql(String sql) {
+        return session.executeSelectListDynamic(sql);
+    }
+
+    @Override
+    public <K, V> List<Map<K, V>> queryBySql(String sql,
+        Map<String, Object> params) {
+        return session.executeSelectListDynamic(sql, params);
+    }
+
+    @Override
+    public <T> List<T> queryBySql(String sql, Class<T> clazz,
+        Map<String, Object> params) {
+        return session.queryBySql(sql, clazz, params);
     }
 
 
@@ -65,7 +84,7 @@ public class MinnieDaoImpl implements MinnieDao {
     /**
      * 删除对象
      *
-     * @param o 被删除的对象
+     * @param o  被删除的对象
      * @param id id
      * @return 失败返回0;成功返回1
      */
