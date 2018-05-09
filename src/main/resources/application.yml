@@ -16,6 +16,8 @@ logging:
 spring:
   mvc:
     static-path-pattern: /static/**
+  thymeleaf:
+    prefix: classpath:/templates
   activemq:
     broker-url: tcp://192.168.16.113:61616
     user: admin
