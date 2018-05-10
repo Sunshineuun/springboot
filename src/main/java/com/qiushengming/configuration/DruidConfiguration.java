@@ -5,6 +5,7 @@ import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -23,21 +24,50 @@ import java.sql.SQLException;
 @Configuration
 public class DruidConfiguration {
 
-    private static final Logger logger = LoggerFactory.getLogger(DruidConfiguration.class);
+    private static final Logger logger =
+        LoggerFactory.getLogger(DruidConfiguration.class);
 
     private static final String DB_PREFIX = "spring.datasource";
 
+    /**
+     * druid白名单
+     */
+    @Value("${minnie.druid.allow}")
+    private String allow = "127.0.0.1";
+
+    /**
+     * druid黑名单
+     */
+    @Value("${minnie.druid.deny}")
+    private String deny = "";
+
+    /**
+     * druid登陆用户
+     */
+    @Value("${minnie.druid.loginUserName}")
+    private String loginUsername = "admin";
+
+    /**
+     * druid登陆密码
+     */
+    @Value("${minnie.druid.loginPassword}")
+    private String loginPassword = "admin";
+
     @Bean
     public ServletRegistrationBean<StatViewServlet> druidServlet() {
-        logger.info("init Druid Servlet Configuration ");
-        ServletRegistrationBean<StatViewServlet> servletRegistrationBean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
+        logger.info("初始化Druid Servlet配置！");
+
+        ServletRegistrationBean<StatViewServlet> servletRegistrationBean =
+            new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
         // IP白名单
-        servletRegistrationBean.addInitParameter("allow", "192.168.2.25,127.0.0.1");
+        servletRegistrationBean.addInitParameter("allow", allow);
         // IP黑名单(共同存在时，deny优先于allow)
-        servletRegistrationBean.addInitParameter("deny", "192.168.1.100");
+        servletRegistrationBean.addInitParameter("deny", deny);
         //控制台管理用户
-        servletRegistrationBean.addInitParameter("loginUsername", "admin");
-        servletRegistrationBean.addInitParameter("loginPassword", "admin");
+        servletRegistrationBean.addInitParameter("loginUsername",
+            loginUsername);
+        servletRegistrationBean.addInitParameter("loginPassword",
+            loginPassword);
         //是否能够重置数据 禁用HTML页面上的“Reset All”功能
         servletRegistrationBean.addInitParameter("resetEnable", "false");
         return servletRegistrationBean;
@@ -45,13 +75,17 @@ public class DruidConfiguration {
 
     @Bean
     public FilterRegistrationBean<WebStatFilter> filterRegistrationBean() {
-        FilterRegistrationBean<WebStatFilter> filterRegistrationBean = new FilterRegistrationBean<>(new WebStatFilter());
+        FilterRegistrationBean<WebStatFilter> filterRegistrationBean =
+            new FilterRegistrationBean<>(new WebStatFilter());
         filterRegistrationBean.addUrlPatterns("/*");
-        filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
+        filterRegistrationBean.addInitParameter("exclusions",
+            "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
         return filterRegistrationBean;
     }
 
-    //解决 spring.datasource.filters=stat,wall,log4j 无法正常注册进去
+    /**
+     * 解决 spring.datasource.filters=stat,wall,log4j 无法正常注册进去
+     */
     @ConfigurationProperties(prefix = DB_PREFIX)
     class CustomDataSourceProperties {
         private String url;
@@ -87,18 +121,21 @@ public class DruidConfiguration {
             datasource.setMinIdle(minIdle);
             datasource.setMaxActive(maxActive);
             datasource.setMaxWait(maxWait);
-            datasource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+            datasource.setTimeBetweenEvictionRunsMillis(
+                timeBetweenEvictionRunsMillis);
             datasource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
             datasource.setValidationQuery(validationQuery);
             datasource.setTestWhileIdle(testWhileIdle);
             datasource.setTestOnBorrow(testOnBorrow);
             datasource.setTestOnReturn(testOnReturn);
             datasource.setPoolPreparedStatements(poolPreparedStatements);
-            datasource.setMaxPoolPreparedStatementPerConnectionSize(maxPoolPreparedStatementPerConnectionSize);
+            datasource.setMaxPoolPreparedStatementPerConnectionSize(
+                maxPoolPreparedStatementPerConnectionSize);
             try {
                 datasource.setFilters(filters);
             } catch (SQLException e) {
-                System.err.println("druid configuration initialization filter: " + e);
+                System.err.println(
+                    "druid configuration initialization filter: " + e);
             }
             datasource.setConnectionProperties(connectionProperties);
             return datasource;
@@ -172,7 +209,8 @@ public class DruidConfiguration {
             return timeBetweenEvictionRunsMillis;
         }
 
-        public void setTimeBetweenEvictionRunsMillis(int timeBetweenEvictionRunsMillis) {
+        public void setTimeBetweenEvictionRunsMillis(
+            int timeBetweenEvictionRunsMillis) {
             this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
         }
 
@@ -180,7 +218,8 @@ public class DruidConfiguration {
             return minEvictableIdleTimeMillis;
         }
 
-        public void setMinEvictableIdleTimeMillis(int minEvictableIdleTimeMillis) {
+        public void setMinEvictableIdleTimeMillis(
+            int minEvictableIdleTimeMillis) {
             this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
         }
 
@@ -228,8 +267,10 @@ public class DruidConfiguration {
             return maxPoolPreparedStatementPerConnectionSize;
         }
 
-        public void setMaxPoolPreparedStatementPerConnectionSize(int maxPoolPreparedStatementPerConnectionSize) {
-            this.maxPoolPreparedStatementPerConnectionSize = maxPoolPreparedStatementPerConnectionSize;
+        public void setMaxPoolPreparedStatementPerConnectionSize(
+            int maxPoolPreparedStatementPerConnectionSize) {
+            this.maxPoolPreparedStatementPerConnectionSize =
+                maxPoolPreparedStatementPerConnectionSize;
         }
 
         public String getFilters() {
