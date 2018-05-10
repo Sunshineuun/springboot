@@ -83,4 +83,9 @@ mybatis:
 minnie:
   mybatis:
     basePackage: com.qiushengming.mapper
+  druid:
+    loginUserName: admin1
+    loginPassword: admin1
+    allow: 192.168.16.118,192.168.16.113
+    deny: 192.168.16.110
 
