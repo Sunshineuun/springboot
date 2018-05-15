@@ -32,4 +32,9 @@ public class HelloWorld {
             producer.send(d, msg);
         }
     }
+
+    @RequestMapping("/exception")
+    public void exception() {
+        throw new NullPointerException("异常测试");
+    }
 }
