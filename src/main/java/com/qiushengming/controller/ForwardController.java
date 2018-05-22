@@ -1,19 +1,23 @@
 package com.qiushengming.controller;
 
+import com.qiushengming.utils.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * 请求路径定向处理
+ *
  * @author qiushengming
  * @date 2018/5/7
  */
 @Controller
-public class ForwardController {
+public class ForwardController extends BaseController{
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -22,11 +26,13 @@ public class ForwardController {
         String contextPath = request.getContextPath();
         String requestURI = request.getRequestURI();
 
+        logger.info("当前请求客户机的IP：{}", WebUtils.getIpAddr(request));
+
         logger.info("当前请求的基地址：{}，uri：{}", contextPath, requestURI);
 
         String ctx = contextPath + "/forward";
         String path =
-            requestURI.substring(requestURI.indexOf(ctx) + ctx.length());
+                requestURI.substring(requestURI.indexOf(ctx) + ctx.length());
 
         char symbol1 = '.';
         String symbol2 = "/";
