@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 /**
- * Created by qiushengming on 2018/5/23.
+ * 1.配置信息缓存 - 0523/TODO <br>
+ *
+ * @author qiushengming
+ * @date 2018/5/23
  */
 @Service(value = "gridViewService")
 public class GridViewConfigureServiceImpl extends BaseServiceImpl<User>
