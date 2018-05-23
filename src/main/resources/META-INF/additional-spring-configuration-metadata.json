@@ -14,5 +14,25 @@
       "name": "minnie.mybatis.basePackage",
       "type": "java.lang.String",
       "description": "Description for minnie.mybatis.basePackage."
+    },
+    {
+      "name": "minnie.druid.loginUserName",
+      "type": "java.lang.String",
+      "description": "Description for minnie.druid.loginUserName."
+    },
+    {
+      "name": "minnie.druid.loginPassword",
+      "type": "java.lang.String",
+      "description": "Description for minnie.druid.loginPassword."
+    },
+    {
+      "name": "minnie.druid.allow",
+      "type": "java.lang.String",
+      "description": "Description for minnie.druid.allow."
+    },
+    {
+      "name": "minnie.druid.deny",
+      "type": "java.lang.String",
+      "description": "Description for minnie.druid.deny."
     }
   ] }

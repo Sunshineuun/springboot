@@ -16,7 +16,8 @@ public class GridViewConfigureController {
     private GridViewConfigureService service;
 
     /**
-     * 获取模块配置信息
+     * 通过模块名称，获取模块配置信息。 \n
+     * 模块名称为唯一标识
      * @param name 模块名称
      * @return 模块配置信息
      */
