@@ -1,5 +1,7 @@
 package com.qiushengming.dao;
 
+import com.qiushengming.mybatis.support.Criteria;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -38,24 +40,54 @@ public interface MinnieDao {
     /**
      * 返回相关列表信息
      *
-     * @param sql 查询sql
+     * @param sql    查询sql
      * @param params 参数
      * @return <code>List<Map<K, V>></code>
      */
     <K, V> List<Map<K, V>> queryBySql(String sql, Map<String, Object> params);
 
     /**
-     *
-     * @param sql 查询sql
-     * @param clazz 实体的Class
+     * @param sql    查询sql
+     * @param clazz  实体的Class
      * @param params 查询参数
      * @return <code>List<T></code>
      */
     <T> List<T> queryBySql(String sql, Class<T> clazz,
-        Map<String, Object> params);
+                           Map<String, Object> params);
 
     /**
-     * 持久化对象
+     * 通过{@link Criteria}组装的条件进行查询
+     *
+     * @param criteria {@link Criteria}
+     * @param clazz    实体的Class
+     * @param <T>      实体
+     * @return 实体列表
+     */
+    <T> List<T> queryByCriteria(Criteria criteria, Class<T> clazz);
+
+    /**
+     * 通过{@link Criteria}组装的条件进行查询，<br>
+     * 调用{@link MinnieDao#queryByCriteria(Criteria, Class)}取结果集的第0条
+     *
+     * @param criteria {@link Criteria}
+     * @param clazz    实体的Class
+     * @param <T>      实体
+     * @return 实体
+     */
+    <T> T queryOneByCriteria(Criteria criteria, Class<T> clazz);
+
+    /**
+     * 通过{@link Criteria}组装的条件进行查询<br>
+     *
+     * @param criteria {@link Criteria}
+     * @param clazz    实体的Class
+     * @param <T>      实体
+     * @return 查询数量
+     */
+    <T> int countByCriteria(Criteria criteria, Class<T> clazz);
+
+    /**
+     * 新增
      *
      * @param o   被持久化的对象
      * @param <T> 泛型

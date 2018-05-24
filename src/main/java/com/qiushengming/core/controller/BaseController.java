@@ -1,4 +1,4 @@
-package com.qiushengming.controller;
+package com.qiushengming.core.controller;
 
 import com.qiushengming.commons.BooleanEditor;
 import com.qiushengming.commons.DoubleEditor;

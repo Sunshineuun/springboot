@@ -1,14 +1,12 @@
-package com.qiushengming.controller;
+package com.qiushengming.core.controller;
 
 import com.qiushengming.utils.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * 请求路径定向处理
@@ -17,7 +15,7 @@ import javax.servlet.http.HttpSession;
  * @date 2018/5/7
  */
 @Controller
-public class ForwardController extends BaseController{
+public class ForwardController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

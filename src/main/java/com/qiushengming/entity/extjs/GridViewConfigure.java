@@ -1,5 +1,7 @@
 package com.qiushengming.entity.extjs;
 
+import com.qiushengming.annotation.Column;
+import com.qiushengming.annotation.Exclude;
 import com.qiushengming.annotation.Table;
 import com.qiushengming.entity.BaseEntity;
 
@@ -25,6 +27,7 @@ public class GridViewConfigure
      */
     private List<ExtColumn> columns;
 
+    @Exclude
     public List<ExtColumn> getColumns() {
         return columns;
     }
@@ -33,6 +36,7 @@ public class GridViewConfigure
         this.columns = columns;
     }
 
+    @Column(value = "MODULE_NAME")
     public String getModuleName() {
         return moduleName;
     }

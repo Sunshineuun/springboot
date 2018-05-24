@@ -1,5 +1,7 @@
 package com.qiushengming.service.impl;
 
+import com.qiushengming.core.service.impl.AbstractManagementService;
+import com.qiushengming.core.service.impl.AbstractQueryServiceImpl;
 import com.qiushengming.entity.User;
 import com.qiushengming.entity.UserExample;
 import com.qiushengming.mapper.UserMapper;
@@ -13,12 +15,12 @@ import java.util.List;
 
 /**
  * @author MinMin
- * @date 18年03月31日
+ * @date 2018/3/31
  */
 @Service(value = "userService")
 @CacheConfig(cacheNames = "user")
 public class UserServiceImpl
-    extends BaseServiceImpl<User>
+    extends AbstractManagementService<User>
     implements UserService {
 
     @Autowired

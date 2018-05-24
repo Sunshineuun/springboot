@@ -1,10 +1,13 @@
 package com.qiushengming.dao;
 
 import com.qiushengming.mybatis.ObjectSession;
+import com.qiushengming.mybatis.support.Criteria;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +17,7 @@ import java.util.Map;
  */
 @Component
 public class MinnieDaoImpl
-    implements MinnieDao {
+        implements MinnieDao {
 
     @Resource(name = "objectSession")
     private ObjectSession session;
@@ -48,16 +51,34 @@ public class MinnieDaoImpl
 
     @Override
     public <K, V> List<Map<K, V>> queryBySql(String sql,
-        Map<String, Object> params) {
+                                             Map<String, Object> params) {
         return session.executeSelectListDynamic(sql, params);
     }
 
     @Override
     public <T> List<T> queryBySql(String sql, Class<T> clazz,
-        Map<String, Object> params) {
+                                  Map<String, Object> params) {
         return session.queryBySql(sql, clazz, params);
     }
 
+    @Override
+    public <T> List<T> queryByCriteria(Criteria criteria, Class<T> clazz) {
+        return session.queryByCriteria(criteria, clazz);
+    }
+
+    @Override
+    public <T> T queryOneByCriteria(Criteria criteria, Class<T> clazz) {
+        List<T> list = this.queryByCriteria(criteria, clazz);
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    @Override
+    public <T> int countByCriteria(Criteria criteria, Class<T> clazz) {
+        return session.countByCriteria(criteria, clazz);
+    }
 
     /**
      * 持久化对象

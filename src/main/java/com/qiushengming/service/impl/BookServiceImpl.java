@@ -1,5 +1,6 @@
 package com.qiushengming.service.impl;
 
+import com.qiushengming.core.service.impl.AbstractManagementService;
 import com.qiushengming.entity.Book;
 import com.qiushengming.service.BookService;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.Map;
  */
 @Service(value = "bookService")
 public class BookServiceImpl
-    extends BaseServiceImpl<Book>
+    extends AbstractManagementService<Book>
     implements BookService {
 
     @Override
