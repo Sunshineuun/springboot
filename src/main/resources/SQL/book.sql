@@ -27,8 +27,7 @@ INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('28', 
 INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('29', '程序员的修炼——从优秀到卓越', '[美]Jeff,Atwood著', '卫宁科技', '仓库');
 INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('3', 'Java多线程编程核心技术', '高洪岩', '卫宁科技', '出借');
 INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('30', 'Node.js微服务', 'David Gonzalez 著 赵震一 郑伟杰 译', '卫宁科技', '出借');
-INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('31', '高性能MySQL（第3版）', 'Baron Schwartz，Peter Zaitsev，Vadim Tkachenko 著；
-宁海元，周振兴，彭立勋 等 译', '卫宁科技', '出借');
+INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('31', '高性能MySQL（第3版）', 'Baron Schwartz，Peter Zaitsev，Vadim Tkachenko 著；宁海元，周振兴，彭立勋 等 译', '卫宁科技', '出借');
 INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('4', '精通自动化测试框架设计', '陈冬严', '卫宁科技', '出借');
 INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('5', 'Web接口开发与自动化测试――基于Python语言', '虫师', '卫宁科技', '仓库');
 INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('6', 'Selenium2自动化测试实战基于Python语言', '虫师', '卫宁科技', '出借');
