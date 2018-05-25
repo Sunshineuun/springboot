@@ -33,7 +33,7 @@ function start() {
     {
       text: '序号',
       xtype: 'rownumberer',
-      sealed: true,
+      sealed: true, // 指定为 true 来约束拖动列不能拖出当前的专栏.
       width: 60,
       editor: null, // 可选配置，xtype名或Field配置对象，用于配置编辑的控件。 仅当表格使用Editing插件时，才可使用。
       editRenderer: function (value) {
