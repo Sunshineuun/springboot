@@ -15,3 +15,6 @@
 4. 广播事件的过程(SimpleApplicationEventMulticaster.multicastEvent)
     4.1 获取所有的监听器，轮询将事件传递给监听器。
     4.2 监听器调用onApplicationEvent方法，根据事件选择执行的代码
+
+5. META-INF/spring.factories的作用，SpringFactoriesLoader.loadFactories。
+    主要用户加载配置类。

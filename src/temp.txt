@@ -1,1 +1,2 @@
-Sorry, you are not permitted to view this page.
+Quick Setup
+As you may already know, to use MyBatis with Spring you need at least an SqlSessionFactory and at least one mapper interface.
