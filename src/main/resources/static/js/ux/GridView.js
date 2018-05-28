@@ -114,12 +114,17 @@ Ext.define('GridView', {
     me.columns.push(rowNumberer);
 
     Ext.Array.forEach(configure.columns, function (value, index, self) {
-      value.renderer = function (value) {
+      value.renderer = function (v) {
+
         /**
-         * TODO
+         *
          * eval函数执行，代码需要已单引号引起来。
+         * 一大进步，知道怎么创建function对象。
          */
-        return eval('"<font>'+ value +'</font>"');
+        var a = value.rendererFun.replace('#', v);
+        var func = new Function(a);
+        return func();
+        // return eval('\'' + a + '\'');
       };
       me.columns.push(value);
     });
@@ -132,8 +137,6 @@ Ext.define('GridView', {
     Ext.Array.forEach(me.configure.columns, function (value, index, self) {
       fields.push(value.dataIndex);
     });
-
-    console.log(fields);
 
     me.store = Ext.create('Ext.data.Store', {
       fields: fields,
@@ -199,8 +202,15 @@ Ext.define('GridView', {
     itemmouseenter: function (view, record, item, index, e, eOpts) {
 
       var flag = false; // false-不显示浮动框，true-显示浮动框。
+
+      if (!e.getTarget(view.cellSelector)) {
+        console.log(view.cellSelector);
+        return;
+      }
+
       // TODO Cannot read property 'cellIndex' of null
-      var column = view.getGridColumns()[e.getTarget(view.cellSelector).cellIndex];
+      // 在某些情况下，e.getTarget(view.getCellSelector()) 的结果为null
+      var column = view.getGridColumns()[e.getTarget(view.getCellSelector()).cellIndex];
 
       if (column.xtype === 'actioncolumn') {
         return;
@@ -208,8 +218,8 @@ Ext.define('GridView', {
 
       var str = record.data[column.dataIndex];
 
-      if (str === undefined || str === null || str === '') {
-        if (view !== null && view.tip !== null) {
+      if (!str) {
+        if (view && view.tip) {
           view.tip.destroy();
           view.tip = null;
         }
@@ -271,22 +281,29 @@ Ext.define('GridView', {
 
       if (flag) {
         //悬浮框创建
-        if (view.tip === null) {
+        if (!view.tip) {
           view.tip = Ext.create('Ext.tip.ToolTip', {
             autoHide: false,
             mouseOffset: [5, 5],
             target: view.el,
-            delegate: view.itemSelector,
+            delegate: '.x-grid-cell-inner',
             renderTo: Ext.getBody(),
-            bodyStyle: 'word-wrap:break-word'
+            bodyStyle: 'word-wrap:break-word',
+            listeners: {
+              /*beforeshow: function(){
+                return true;
+              }*/
+            }
           });
         }
-        view.el.clean(); // 清理
-        view.tip.update(str); // 更新显示内容
+        // view.el.clean(); // 清理
+        view.tip.setHtml(str); // 更新显示内容
       } else {
         if (view.tip) {
-          view.tip.destroy();
-          view.tip = null;
+          // TODO 怎么在他不需要展示的时候隐藏掉
+          view.tip.setHtml("");
+          // view.tip.destroy();
+          // view.tip = null;
         }
       }
     }

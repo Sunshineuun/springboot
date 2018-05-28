@@ -67,7 +67,7 @@ public class ExtColumn extends BaseEntity {
     /**
      * 列自定义渲染，值是一个函数。
      */
-    private String renderer = "_value";
+    private String rendererFun = "\"#\"";
 
     @Column(value = "MODULE_ID")
     public String getModuleId() {
@@ -144,18 +144,19 @@ public class ExtColumn extends BaseEntity {
         this.width = width;
     }
 
-    public String getRenderer() {
-        return renderer;
+    @Column("RENDERER_FUN")
+    public String getRendererFun() {
+        return rendererFun;
     }
 
     /**
      * 理论上，传入的值是怎么渲染的JS代码
      *
-     * @param renderer String
+     * @param rendererFun String
      */
-    public void setRenderer(String renderer) {
-        if (StringUtils.isNotEmpty(renderer)) {
-            this.renderer = renderer;
+    public void setRendererFun(String rendererFun) {
+        if (StringUtils.isNotEmpty(rendererFun)) {
+            this.rendererFun = rendererFun;
         }
     }
 }
