@@ -67,7 +67,7 @@ public class ExtColumn extends BaseEntity {
     /**
      * 列自定义渲染，值是一个函数。
      */
-    private String rendererFun = "\"#\"";
+    private String rendererFun = "return \"#\";";
 
     @Column(value = "MODULE_ID")
     public String getModuleId() {
