@@ -290,9 +290,9 @@ Ext.define('GridView', {
             renderTo: Ext.getBody(),
             bodyStyle: 'word-wrap:break-word',
             listeners: {
-              /*beforeshow: function(){
-                return true;
-              }*/
+              beforeshow: function (thiz) {
+                return !!thiz.html;
+              }
             }
           });
         }
@@ -302,8 +302,6 @@ Ext.define('GridView', {
         if (view.tip) {
           // TODO 怎么在他不需要展示的时候隐藏掉
           view.tip.setHtml("");
-          // view.tip.destroy();
-          // view.tip = null;
         }
       }
     }
