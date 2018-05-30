@@ -34,6 +34,6 @@ public class BaseEntity implements Serializable {
 
     @Override
     public String toString() {
-        return Json.toJson(this);
+        return Json.objectToJson(this);
     }
 }
