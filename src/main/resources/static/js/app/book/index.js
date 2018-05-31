@@ -126,7 +126,10 @@ function start() {
       align: 'stretch'
     },
     features: [groupingFeature],
-    plugins: [roweditPlugins],
+    plugins: [{
+      clicksToEdit: 5, // 配置点击几次显示gird编辑器.
+      ptype: 'rowediting'
+    }],
     forceFit: true,
     split: true,
     bufferedRenderer: false,

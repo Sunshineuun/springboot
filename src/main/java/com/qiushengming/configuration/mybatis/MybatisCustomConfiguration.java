@@ -3,7 +3,6 @@ package com.qiushengming.configuration.mybatis;
 import com.qiushengming.mybatis.annotation.support.AnnotationSqlSessionFactoryBean;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -24,9 +23,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * mybatis sqlSessionFactory and sqlSessionTemplate创建 <br>
@@ -64,8 +61,9 @@ public class MybatisCustomConfiguration {
         this.configurationCustomizers = configurationCustomizersProvider.getIfAvailable();
     }
 
-//    @Bean(name = "sqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactoryBean(DataSource dataSource) throws Exception {
+    @Bean(name = "sqlSessionFactory")
+    public SqlSessionFactory sqlSessionFactoryBean(
+        @Qualifier("dataSource") DataSource dataSource) throws Exception {
         AnnotationSqlSessionFactoryBean bean = new AnnotationSqlSessionFactoryBean();
 
         // 设置数据源
@@ -102,23 +100,9 @@ public class MybatisCustomConfiguration {
         return bean.getObject();
     }
 
-//    @Bean(name = "sqlSessionTemplate")
-    public SqlSessionTemplate sqlSessionTemplate(DataSource dataSource) throws Exception {
-        return new SqlSessionTemplate(sqlSessionFactoryBean(dataSource));
-    }
-
-    @Bean(name = "sqlSessionMap")
-    public Map<String, SqlSession> createMultiDataSource(
-            @Qualifier("dataSource") DataSource dataSource,
-            @Qualifier("oracleDataSource") DataSource oracleDataSource) {
-        Map<String, SqlSession> map = new HashMap<>(2);
-        try {
-            map.put("mysql", sqlSessionTemplate(dataSource));
-            map.put("oracle", sqlSessionTemplate(oracleDataSource));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return map;
+    @Bean(name = "sqlSessionTemplate")
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
+        return new SqlSessionTemplate(sqlSessionFactory);
     }
 
 }

@@ -14,8 +14,10 @@ Ext.define('GridView', {
   pageSize: 30, // 每页显示条数
   sorters: [],
   startLoad: true,
+  roweditable: false, // 是否启用行编辑模式
   // 原始属性-----------------------------------------------------------------------------------------------------------
   columns: [],
+  plugins: [],
   forceFit: true,
   initComponent: function () {
     var me = this;
@@ -35,6 +37,8 @@ Ext.define('GridView', {
     me.initPanel();
     // 初始化列配置
     me.initColumns();
+    // 初始化插件
+    me.initPlugins();
     // 创建store
     me.createStore();
   },
@@ -128,6 +132,14 @@ Ext.define('GridView', {
       };
       me.columns.push(value);
     });
+  },
+  initPlugins: function () {
+    var me = this;
+
+    Ext.Array.forEach(me.configure.plugins, function (value, index, self) {
+      me.plugins.push(Ext.apply(value, value.configMap))
+    });
+
   },
   createStore: function () {
     var me = this;
@@ -302,6 +314,8 @@ Ext.define('GridView', {
         if (view.tip) {
           // TODO 怎么在他不需要展示的时候隐藏掉
           view.tip.setHtml("");
+          // view.tip.destroy();
+          // view.tip = null;
         }
       }
     }

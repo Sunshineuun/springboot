@@ -36,9 +36,8 @@ public class ObjectSessionImpl
 
     @Autowired
     public ObjectSessionImpl(
-        @Qualifier(value = "sqlSessionMap") Map<String, SqlSession> sqlSessionMap) {
-        super(sqlSessionMap.get("mysql"));
-        setSqlSessionMap(sqlSessionMap);
+        @Qualifier(value = "sqlSessionTemplate") SqlSession sqlSession) {
+        super(sqlSession);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.qiushengming.annotation.Column;
 import com.qiushengming.annotation.Exclude;
 import com.qiushengming.annotation.Table;
 import com.qiushengming.entity.BaseEntity;
+import com.qiushengming.utils.Json;
 import com.qiushengming.utils.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -21,7 +22,7 @@ import static com.qiushengming.commons.Constants.JIN_HAO;
  */
 @Table(value = "GRID_VIEW_CONFIGURE", resultMapId = "GridViewConfigureMap")
 public class GridViewConfigure
-        extends BaseEntity {
+    extends BaseEntity {
 
     /**
      * 模块名称，为唯一标识，外部通过该标识获取模块的配置信息。 <br>
@@ -33,11 +34,6 @@ public class GridViewConfigure
      * 模块请求后台的url地址
      */
     private String url;
-
-    /**
-     * 实体中的columns的配置信息。详见{@link ExtColumn}
-     */
-    private List<ExtColumn> columns;
 
     /**
      * 设置为true，则强制使得列自适应成可用宽度
@@ -80,14 +76,21 @@ public class GridViewConfigure
 
     private boolean startLoad = true;
 
-    @Exclude
-    public List<ExtColumn> getColumns() {
-        return columns;
-    }
+    /**
+     * 实体中的columns的配置信息。详见{@link ExtColumn}
+     */
+    private List<ExtColumn> columns;
 
-    public void setColumns(List<ExtColumn> columns) {
-        this.columns = columns;
-    }
+    /**
+     * 提供插件
+     */
+    private List<ExtPlugin> plugins = new ArrayList<>();
+
+    /**
+     * 行编辑模式中，当前类编辑框的类型
+     */
+    private Map<String, Object> editor;
+
 
     @Column(value = "MODULE_NAME")
     public String getModuleName() {
@@ -97,7 +100,6 @@ public class GridViewConfigure
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
     }
-
 
     public String getUrl() {
         return url;
@@ -174,12 +176,18 @@ public class GridViewConfigure
     public void setSorters(String sorters) {
         for (String s : sorters.split(DOU_HAO)) {
             String[] s1 = s.split(JIN_HAO);
-            this.sorters.add(MapUtils.newMap("property",s1[0], "direction", s1[1]));
+            this.sorters.add(MapUtils.newMap("property",
+                s1[0],
+                "direction",
+                s1[1]));
         }
 
         if (StringUtils.isEmpty(sorters)
-                || CollectionUtils.isEmpty(this.sorters)) {
-            this.sorters.add(MapUtils.newMap("property","ID", "direction", "ASC"));
+            || CollectionUtils.isEmpty(this.sorters)) {
+            this.sorters.add(MapUtils.newMap("property",
+                "ID",
+                "direction",
+                "ASC"));
         }
     }
 
@@ -189,5 +197,36 @@ public class GridViewConfigure
 
     public void setStartLoad(boolean startLoad) {
         this.startLoad = startLoad;
+    }
+
+    @Exclude
+    public List<ExtColumn> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<ExtColumn> columns) {
+        this.columns = columns;
+    }
+
+    @Exclude
+    public List<ExtPlugin> getPlugins() {
+        return plugins;
+    }
+
+    public void setPlugins(List<ExtPlugin> plugins) {
+        this.plugins = plugins;
+    }
+
+    public String getEditor(){
+        return editor.toString();
+    }
+
+    @Exclude
+    public Map<String, Object> getMapEditor() {
+        return editor;
+    }
+
+    public void setEditor(String editor) {
+        this.editor = Json.stringToMap(editor);
     }
 }

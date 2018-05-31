@@ -28,8 +28,6 @@ public class DynamicSqlDaoImpl
 
     private final SqlSession sqlSession;
 
-    private Map<String, SqlSession> sqlSessionMap;
-
     public DynamicSqlDaoImpl(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }
@@ -185,13 +183,5 @@ public class DynamicSqlDaoImpl
     @Override
     public SqlSession getSqlSession() {
         return sqlSession;
-    }
-
-    public SqlSession getSqlSession(String source) {
-        return sqlSessionMap.get(source);
-    }
-
-    public void setSqlSessionMap(Map<String, SqlSession> sqlSessionMap) {
-        this.sqlSessionMap = sqlSessionMap;
     }
 }
