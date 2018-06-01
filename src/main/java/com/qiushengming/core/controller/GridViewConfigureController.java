@@ -23,7 +23,6 @@ public class GridViewConfigureController {
      * @param name 模块名称{@link GridViewConfigure#moduleName}
      * @return 模块配置信息
      */
-    @ResponseBody
     @RequestMapping(value = "/gridview/getModuleNameByConfigure/{name}", method = RequestMethod.GET)
     public GridViewConfigure getModuleNameByConfigure(@PathVariable String name) {
         return service.getModuleByConfigure(name);

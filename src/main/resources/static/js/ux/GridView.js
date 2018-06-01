@@ -3,9 +3,9 @@
  *  2. 单元格中的值溢出，展示悬浮。
  *
  */
-Ext.define('GridView', {
+Ext.define('Ext.ux.GridView', {
   extend: 'Ext.grid.Panel',
-  alias: 'GridView',
+  alias: 'widget.uxgridview',
   // 自定义属性---------------------------------------------------------------------------------------------------------
   moduleName: '',
   url: '',
@@ -15,6 +15,9 @@ Ext.define('GridView', {
   sorters: [],
   startLoad: true,
   roweditable: false, // 是否启用行编辑模式
+  dictLoad: true,
+  dictUrl: '/dictionary/loadDictionary.do',
+  dictionaryParams: [],
   // 原始属性-----------------------------------------------------------------------------------------------------------
   columns: [],
   plugins: [],
@@ -39,8 +42,56 @@ Ext.define('GridView', {
     me.initColumns();
     // 初始化插件
     me.initPlugins();
+    // 加载字典
+    me.loadDictionary();
     // 创建store
     me.createStore();
+  },
+  loadDictionary: function () {
+    var me = this;
+    if (!me.dictLoad || !me.dictUrl){
+      return;
+    }
+
+    // 增加默认的字典
+    /*if (!me.dictionaryParams) {
+      me.dictionaryParams = [["EXPLAINTYPE", "ADD_EXPLAINTYPE"]];
+    } else {
+      me.dictionaryParams[0].push("EXPLAINTYPE");
+      me.dictionaryParams[0].push("ADD_EXPLAINTYPE");
+    }*/
+
+    var params = {};
+
+    if (me.dictionaryParams[0]) {
+      params["typeCodeStr"] = array2Str(me.dictionaryParams[0]);
+    }
+    if (me.dictionaryParams[1]){
+      params["queryIdStr"] = array2Str(me.dictionaryParams[1]);
+    }
+
+    if (!Ext.isEmpty(params)) {
+      Ext.Ajax.request({
+        async: false,
+        url: me.dictUrl,
+        params: params,
+        success: function (response, opts) {
+          var obj = Ext.decode(response.responseText);
+          if (obj) {
+            for (var key in obj) {
+              dictionary[key] = eval(obj[key]);
+            }
+          }
+        },
+        failure: function (response, opts) {
+          error('数据字典加载失败！');
+        }
+      });
+    }
+
+    var afterLoadDictionary = me.navGrid.loaddictionaryoption.afterLoadDictionary;
+    if (afterLoadDictionary && typeof(afterLoadDictionary) == "function")
+      afterLoadDictionary(dictionary);
   },
   loadModuleConfig: function () {
     var me = this;
@@ -370,3 +421,134 @@ Ext.define('GridView', {
  enableColumnHide: false, // 设置为false则禁用隐藏表格中的列
  alignrightside: false, //是否加入右对齐
  isInitToolTip: true,*/
+
+Ext.define('Ext.ux.Combobox', {
+  extend: 'Ext.form.field.ComboBox',
+  alias: 'widget.uxcombobox',
+  initComponent: function () {
+    var me = this;
+    me.createStore();
+
+    this.callParent();
+
+    if (me.url) {
+      me.on("expand", function () {
+        me.getStore().load();
+      })
+    }
+  },
+  url: null,
+  hasEmpty: false,
+  labelAlign: "right",
+  values: null,
+  trigger1Cls: 'x-form-clear-trigger',
+  trigger2Cls: 'x-form-arrow-trigger',
+  onTrigger1Click: function () {
+    this.clearValue();
+    this.fireEvent('clear', this);
+  },
+  onTrigger2Click: function () {
+    this.onTriggerClick();
+  },
+  changeLocalStore: function (values, initValue) {
+    var me = this;
+    if (!me.url && values) {
+      me.store.loadData(values);
+      if (initValue && values.length > 0)
+        me.setValue(values[0][0]);
+      else
+        me.setValue(null);
+    }
+  },
+  changeRemoteStore: function (url) {
+    var me = this;
+    if (me.url && url) {
+      me.url = url;
+      me.store.setProxy({
+        type: "ajax",
+        url: me.url
+      });
+    }
+  },
+  bindParams: null,
+  setComboValue: function (value, doSelect) {
+    var me = this;
+
+    if (me.queryMode === "remote") {
+      if (me.store.proxy.extraParams)
+        Ext.apply(me.store.proxy.extraParams, {
+          "searchParam": value
+        });
+      else
+        me.store.proxy.extraParams = {
+          "searchParam": value
+        };
+      me.store.load();
+
+      Ext.apply(me.store.proxy.extraParams, {
+        "searchParam": null
+      });
+
+      me.setValue(value, doSelect);
+    } else {
+      me.setValue(value, doSelect);
+    }
+  },
+  createStore: function () {
+    var me = this;
+    if (!me.url) {
+      if (me.hasEmpty)
+        me.values.push([]);
+
+      me.queryMode = "local";
+      me.store = Ext.create('Ext.data.ArrayStore', {
+        fields: [me.valueField, me.displayField],
+        data: me.values
+      });
+    } else if (me.url) {
+      me.queryMode = "remote";
+      me.store = Ext.create('Ext.data.Store', {
+        pageSize: me.limit ? me.limit : 25,
+        proxy: {
+          type: "ajax",
+          actionMethods: "post",
+          url: me.url,
+          reader: {
+            type: "array",
+            root: "result"
+          }
+        },
+        fields: [me.valueField, me.displayField],
+        listeners: {
+          beforeload: function (store, options) {
+            if (me.bindParams) {
+              if (store.proxy.extraParams) {
+                Ext.apply(
+                  store.proxy.extraParams,
+                  me.bindParams());
+              } else {
+                store.proxy.extraParams = me
+                  .bindParams();
+              }
+            }
+
+            if (me.hasEmpty) {
+              Ext.apply(store.proxy.extraParams, {
+                hasEmpty: true
+              });
+            } else {
+              Ext.apply(store.proxy.extraParams, {
+                hasEmpty: false
+              });
+            }
+          }
+        }
+      });
+    }
+  },
+  queryMode: 'local',
+  forceSelection: true,
+  triggerAction: 'all',
+  displayField: 'label',
+  valueField: 'value'
+});

@@ -2,12 +2,13 @@ package com.qiushengming.dao;
 
 import com.qiushengming.mybatis.ObjectSession;
 import com.qiushengming.mybatis.support.Criteria;
+import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,10 @@ public class MinnieDaoImpl
 
     @Resource(name = "objectSession")
     private ObjectSession session;
+
+    public SqlSession getSqlSession() {
+        return session.getSqlSession();
+    }
 
 
     /**
@@ -73,6 +78,21 @@ public class MinnieDaoImpl
             return null;
         }
         return list.get(0);
+    }
+
+    @Override
+    public <T> List<T> query(String mybaitsId) {
+        return getSqlSession().selectList(mybaitsId);
+    }
+
+    @Override
+    public <T> List<T> query(String mybaitsId, Object params) {
+        return getSqlSession().selectList(mybaitsId, params);
+    }
+
+    @Override
+    public <T> List<T> query(String mybaitsId, Object params, int offset, int limit) {
+        return getSqlSession().selectList(mybaitsId, params, new RowBounds(offset, limit));
     }
 
     @Override

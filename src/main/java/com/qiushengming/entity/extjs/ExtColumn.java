@@ -3,13 +3,18 @@ package com.qiushengming.entity.extjs;
 import com.qiushengming.annotation.Column;
 import com.qiushengming.annotation.Table;
 import com.qiushengming.entity.BaseEntity;
+import com.qiushengming.utils.Json;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 /**
  * @author qiushengming
  * @date 2018/5/23.
  */
-@Table(value = "EXT_COULUMN", resultMapId = "ExtColumnMap")
+@Table(value = "EXT_COULUMN",
+        resultMapId = "ExtColumnMap",
+        selectSql = "SELECT * FROM (SELECT * FROM EXT_COULUMN ORDER BY ORDER_INDEX) T1")
 public class ExtColumn extends BaseEntity {
 
     /**
@@ -68,6 +73,16 @@ public class ExtColumn extends BaseEntity {
      * 列自定义渲染，值是一个函数。
      */
     private String rendererFun = "return \"#\";";
+
+    /**
+     * 行编辑模式中，当前类编辑框的类型
+     */
+    private Map<String, Object> editor;
+
+    /**
+     * 列顺序标识
+     */
+    private int orderIndex = 0;
 
     @Column(value = "MODULE_ID")
     public String getModuleId() {
@@ -158,5 +173,22 @@ public class ExtColumn extends BaseEntity {
         if (StringUtils.isNotEmpty(rendererFun)) {
             this.rendererFun = rendererFun;
         }
+    }
+
+    public Map<String, Object> getEditor() {
+        return editor;
+    }
+
+    public void setEditor(String editor) {
+        this.editor = Json.stringToMap(editor);
+    }
+
+    @Column("ORDER_INDEX")
+    public int getOrderIndex() {
+        return orderIndex;
+    }
+
+    public void setOrderIndex(int orderIndex) {
+        this.orderIndex = orderIndex;
     }
 }

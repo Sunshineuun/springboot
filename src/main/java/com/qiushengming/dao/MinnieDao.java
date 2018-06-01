@@ -76,6 +76,12 @@ public interface MinnieDao {
      */
     <T> T queryOneByCriteria(Criteria criteria, Class<T> clazz);
 
+    <T> List<T> query(String mybaitsId);
+
+    <T> List<T> query(String mybaitsId, Object params);
+
+    <T> List<T> query(String mybaitsId, Object params, int offset, int limit);
+
     /**
      * 通过{@link Criteria}组装的条件进行查询<br>
      *

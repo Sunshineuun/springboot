@@ -1,6 +1,6 @@
 package com.qiushengming.controller;
 
-import com.qiushengming.entity.MinNieResponse;
+import com.qiushengming.entity.code.MinNieResponse;
 import com.qiushengming.service.BookService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

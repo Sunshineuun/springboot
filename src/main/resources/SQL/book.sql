@@ -34,3 +34,5 @@ INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('6', '
 INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('7', 'Python核心编程(第3版)', '[美]WesleyChun著；孙波翔，李斌，李晗译', '卫宁科技', '出借');
 INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('8', 'Docker经典实例', '[美]戈阿冈(SébastienGoasguen)著；刘斌译', '卫宁科技', '出借');
 INSERT INTO sunshine.book (ID, NAME, AUTHOR, AFFILIATION, OCCUPY) VALUES ('9', '深入浅出Node.js', '朴灵', '卫宁科技', '出借');
+UPDATE BOOK SET OCCUPY = '1' WHERE OCCUPY = '仓库';
+UPDATE BOOK SET OCCUPY = '2' WHERE OCCUPY = '出借';

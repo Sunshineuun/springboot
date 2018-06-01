@@ -1,7 +1,6 @@
 package com.qiushengming.service.impl;
 
 import com.qiushengming.core.service.impl.AbstractManagementService;
-import com.qiushengming.core.service.impl.AbstractQueryServiceImpl;
 import com.qiushengming.entity.User;
 import com.qiushengming.entity.UserExample;
 import com.qiushengming.mapper.UserMapper;

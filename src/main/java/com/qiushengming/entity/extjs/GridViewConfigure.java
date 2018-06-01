@@ -4,7 +4,6 @@ import com.qiushengming.annotation.Column;
 import com.qiushengming.annotation.Exclude;
 import com.qiushengming.annotation.Table;
 import com.qiushengming.entity.BaseEntity;
-import com.qiushengming.utils.Json;
 import com.qiushengming.utils.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -85,12 +84,6 @@ public class GridViewConfigure
      * 提供插件
      */
     private List<ExtPlugin> plugins = new ArrayList<>();
-
-    /**
-     * 行编辑模式中，当前类编辑框的类型
-     */
-    private Map<String, Object> editor;
-
 
     @Column(value = "MODULE_NAME")
     public String getModuleName() {
@@ -215,18 +208,5 @@ public class GridViewConfigure
 
     public void setPlugins(List<ExtPlugin> plugins) {
         this.plugins = plugins;
-    }
-
-    public String getEditor(){
-        return editor.toString();
-    }
-
-    @Exclude
-    public Map<String, Object> getMapEditor() {
-        return editor;
-    }
-
-    public void setEditor(String editor) {
-        this.editor = Json.stringToMap(editor);
     }
 }

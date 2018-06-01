@@ -19,4 +19,8 @@ public class Json {
     public static Map stringToMap(String s) {
         return GSON.fromJson(s, Map.class);
     }
+
+    public static void main(String[] args) {
+        stringToMap("{\"xtype\": \"textfield\", \"allowBlank\": false}");
+    }
 }

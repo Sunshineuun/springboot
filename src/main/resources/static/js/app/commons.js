@@ -64,3 +64,15 @@ function download_file(url, params) {
   form.submit();
   document.body.removeChild(form);
 }
+
+function formatter(dictionaryKey, value) {
+  var values = dictionary[dictionaryKey];
+  for (var i = 0; i < values.length; i++) {
+    if (values[i][0] === value)
+      return values[i][1];
+  }
+  if (!value){
+    return "";
+  }
+  return value;
+}

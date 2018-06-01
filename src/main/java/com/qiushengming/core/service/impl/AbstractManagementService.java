@@ -14,7 +14,7 @@ import java.util.List;
  * @date 2018/5/24.
  */
 public class AbstractManagementService<T extends BaseEntity>
-        extends AbstractQueryServiceImpl<T>
+        extends AbstractQueryService<T>
         implements ManagementService<T> {
 
     /**

@@ -1,6 +1,6 @@
 package com.qiushengming.controller;
 
-import com.qiushengming.entity.MinNieResponse;
+import com.qiushengming.entity.code.MinNieResponse;
 import com.qiushengming.entity.User;
 import com.qiushengming.service.UserService;
 import org.springframework.web.bind.annotation.RequestMapping;

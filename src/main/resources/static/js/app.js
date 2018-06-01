@@ -1,13 +1,15 @@
 Ext.onReady(function () {
 
-  Ext.QuickTips.init();
-
-  var grid = new GridView({
+  /*var grid = new Ext.ux.GridView({
     moduleName: 'Book'
-  });
+  });*/
 
   Ext.create("Ext.container.Viewport", {
     layout: 'fit',
-    items: grid
+    items: {
+      xtype: 'uxgridview',
+      moduleName: 'Book',
+      dictionaryParams: [[], ['TYPE']] //TODO
+    }
   });
 });

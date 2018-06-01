@@ -1,27 +1,36 @@
 package com.qiushengming;
 
-import org.apache.commons.collections.map.CaseInsensitiveMap;
-import org.springframework.util.LinkedCaseInsensitiveMap;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-/**
- * Created by qiushengming on 2018/5/22.
- */
 public class Tests {
-    public static void main(String[] args) {
-        Map map = new CaseInsensitiveMap();
-        map.put("A", "A");
-        map.put("b", "b");
-        map.put("C", "c");
-        map.put("d", "D");
-        map.put("下", "D");
-        System.out.println(map.get("a"));
-        System.out.println(map.get("B"));
-        System.out.println(map.get("c"));
-        System.out.println(map.get("下"));
-        System.out.println(map);
-
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+        /*File file = new File("D:/text.txt");
+        FileOutputStream out = new FileOutputStream(file);
+        int a = 0;
+        for (int i = 0; i < 50000; i++) {
+            char b = (char) i;
+            out.write((String.valueOf(b) + '-' + i + '\n').getBytes());
+        }
+        out.flush();
+        out.close();*/
+        //确定计算方法
+        /*String str = "邱胜明1";
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        BASE64Encoder base64en = new BASE64Encoder();
+        //加密后的字符串
+        String newstr = base64en.encode(md5.digest(str.getBytes("utf-8")));
+        System.out.println(newstr);*/
+        /*int a = 20121025;
+        while (a != 1) {
+            int b = a % 2;
+            a = a / 2;
+            System.out.print(b);
+            System.out.print("-");
+            System.out.println(a);
+        }*/
+        String t = "hello";
+        char c[] = {'h', 'e', 'l', 'l', 'o'};
+        System.out.println(t.equals(c));
     }
 }
