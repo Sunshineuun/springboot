@@ -53,7 +53,7 @@ public interface MinnieDao {
      * @return <code>List<T></code>
      */
     <T> List<T> queryBySql(String sql, Class<T> clazz,
-                           Map<String, Object> params);
+        Map<String, Object> params);
 
     /**
      * 通过{@link Criteria}组装的条件进行查询
@@ -115,8 +115,7 @@ public interface MinnieDao {
      *
      * @param o   被删除的对象
      * @param id  id
-     * @param <T> 泛型
      * @return 失败返回0;成功返回1
      */
-    <T> int delete(Serializable id, T o);
+    int delete(Serializable id, Class<?> o);
 }

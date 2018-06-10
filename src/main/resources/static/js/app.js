@@ -1,3 +1,4 @@
+var moduleName = 'Book';
 Ext.onReady(function () {
 
   /*var grid = new Ext.ux.GridView({
@@ -8,8 +9,8 @@ Ext.onReady(function () {
     layout: 'fit',
     items: {
       xtype: 'uxgridview',
-      moduleName: 'Book',
-      dictionaryParams: [[], ['TYPE']] //TODO
+      moduleName: moduleName,
+      dictionaryParams: [['TYPE'],[]] //TODO
     }
   });
 });

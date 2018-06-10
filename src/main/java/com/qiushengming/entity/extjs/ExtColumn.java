@@ -65,6 +65,11 @@ public class ExtColumn extends BaseEntity {
     private boolean groupable = true;
 
     /**
+     * 是否锁定
+     */
+    private boolean locked = true;
+
+    /**
      * 列的宽度<br>
      */
     private int width = 125;
@@ -149,6 +154,14 @@ public class ExtColumn extends BaseEntity {
 
     public void setGroupable(boolean groupable) {
         this.groupable = groupable;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
     public int getWidth() {

@@ -67,12 +67,15 @@ function download_file(url, params) {
 
 function formatter(dictionaryKey, value) {
   var values = dictionary[dictionaryKey];
+
+  if (!value || !values){
+    return "";
+  }
+
   for (var i = 0; i < values.length; i++) {
     if (values[i][0] === value)
       return values[i][1];
   }
-  if (!value){
-    return "";
-  }
+
   return value;
 }

@@ -57,6 +57,12 @@ public class GridViewConfigure
     private boolean columnLines = true;
 
     /**
+     * 设置为true，则启用此表格的锁定支持。或者，如果任何一列的列配置中包含锁定的配置选项，
+     * 锁定也将会自动启用
+     */
+    private boolean enableLocking = false;
+
+    /**
      * 每页展示多少数据。
      */
     private int pageSize = 25;
@@ -136,6 +142,15 @@ public class GridViewConfigure
 
     public void setColumnLines(boolean columnLines) {
         this.columnLines = columnLines;
+    }
+
+    @Column("ENABLE_LOCKING")
+    public boolean isEnableLocking() {
+        return enableLocking;
+    }
+
+    public void setEnableLocking(boolean enableLocking) {
+        this.enableLocking = enableLocking;
     }
 
     @Column("PAGE_SIZE")

@@ -31,10 +31,10 @@ public interface ManagementService<T extends BaseEntity>
     /**
      * 删除，根据ID删除
      *
-     * @param id 实体的ID
+     * @param baseDomain 实体
      * @return 删除成功的数量
      */
-    int deleteById(String id);
+    int delete(T baseDomain);
 
     /**
      * 根据条件删除,通过{@link Criteria}组装条件

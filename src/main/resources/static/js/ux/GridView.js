@@ -16,9 +16,18 @@ Ext.define('Ext.ux.GridView', {
   startLoad: true,
   roweditable: false, // 是否启用行编辑模式
   dictLoad: true,
-  dictUrl: '/dictionary/loadDictionary.do',
+  dictUrl: '/loadDictionary',
   dictionaryParams: [],
+  hasRightMenu: true,
+  navGrid: {
+    addText: '新增',
+    delText: '删除',
+    loaddictionaryoption: {
+      afterLoadDictionary: null
+    }
+  },
   // 原始属性-----------------------------------------------------------------------------------------------------------
+  id: moduleName,
   columns: [],
   plugins: [],
   forceFit: true,
@@ -42,6 +51,8 @@ Ext.define('Ext.ux.GridView', {
     me.initColumns();
     // 初始化插件
     me.initPlugins();
+    // 初始化菜单
+    me.initRightMenu();
     // 加载字典
     me.loadDictionary();
     // 创建store
@@ -49,24 +60,24 @@ Ext.define('Ext.ux.GridView', {
   },
   loadDictionary: function () {
     var me = this;
-    if (!me.dictLoad || !me.dictUrl){
+    if (!me.dictLoad || !me.dictUrl) {
       return;
     }
 
     // 增加默认的字典
     /*if (!me.dictionaryParams) {
-      me.dictionaryParams = [["EXPLAINTYPE", "ADD_EXPLAINTYPE"]];
-    } else {
-      me.dictionaryParams[0].push("EXPLAINTYPE");
-      me.dictionaryParams[0].push("ADD_EXPLAINTYPE");
-    }*/
+     me.dictionaryParams = [["EXPLAINTYPE", "ADD_EXPLAINTYPE"]];
+     } else {
+     me.dictionaryParams[0].push("EXPLAINTYPE");
+     me.dictionaryParams[0].push("ADD_EXPLAINTYPE");
+     }*/
 
     var params = {};
 
     if (me.dictionaryParams[0]) {
       params["typeCodeStr"] = array2Str(me.dictionaryParams[0]);
     }
-    if (me.dictionaryParams[1]){
+    if (me.dictionaryParams[1]) {
       params["queryIdStr"] = array2Str(me.dictionaryParams[1]);
     }
 
@@ -90,7 +101,7 @@ Ext.define('Ext.ux.GridView', {
     }
 
     var afterLoadDictionary = me.navGrid.loaddictionaryoption.afterLoadDictionary;
-    if (afterLoadDictionary && typeof(afterLoadDictionary) == "function")
+    if (afterLoadDictionary && typeof(afterLoadDictionary) === "function")
       afterLoadDictionary(dictionary);
   },
   loadModuleConfig: function () {
@@ -147,7 +158,7 @@ Ext.define('Ext.ux.GridView', {
      */
     var rowNumberer = new Ext.grid.RowNumberer({
       header: '序号',
-      width: 23,
+      width: 50,
       resizable: true,
       sealed: true,
       renderer: function (value, metadata, record, rowIndex, columnIndex, store) {
@@ -188,9 +199,42 @@ Ext.define('Ext.ux.GridView', {
     var me = this;
 
     Ext.Array.forEach(me.configure.plugins, function (value, index, self) {
+      if (value.ptype === 'rowediting') {
+        var listeners = {
+          listeners: {
+            edit: function (editor, e, eOpts) {
+              me.submitHandler(editor, e, eOpts);
+            }
+          }
+        };
+        Ext.apply(value, listeners);
+      }
       me.plugins.push(Ext.apply(value, value.configMap))
     });
 
+  },
+  initRightMenu: function () {
+    var me = this;
+    if (me.hasRightMenu) {
+      var array = [{
+        text: me.navGrid.addText,
+        iconCls: "table_add",
+        handler: me.addHandler
+      }, {
+        text: me.navGrid.delText,
+        iconCls: "table_delete",
+        handler: me.delHandler
+      }];
+      me.rightMenu = new Ext.menu.Menu({
+        items: array
+      });
+
+      me.addListener('itemcontextmenu', function (his, record, item, index, e) {
+        e.preventDefault();
+        e.stopEvent();// 取消浏览器默认事件
+        me.rightMenu.showAt(e.getXY());// 菜单打开的位置
+      });
+    }
   },
   createStore: function () {
     var me = this;
@@ -250,6 +294,62 @@ Ext.define('Ext.ux.GridView', {
     me.viewport = Ext.create("Ext.container.Viewport", {
       layout: 'fit',
       items: [me]
+    });
+  },
+  submitHandler: function (editor, e, eOpts) {
+    //rowediiting 提交逻辑
+    //获取record
+    var formData = e.record.getData();
+    var grid = Ext.getCmp(moduleName);
+    var url = '/execute/edit';
+    console.debug(formData);
+
+    if (formData['id'] === 'add') {
+      url = '/execute/add';
+    }
+
+    Ext.Ajax.request({
+      url: url,
+      params: formData,
+      success: function (response) {
+        var result = Ext.decode(response.responseText);
+        if (result.success) {
+          //页面效果，提交数据
+          e.record.commit();
+          //重新排序，防止出现错位现象
+          grid.store.sort('id', 'DESC');
+        }
+      }
+    });
+  },
+  /**
+   *
+   * @param item 被点击项目
+   * @param e 事件
+   */
+  addHandler: function (item, e) {
+    var grid = Ext.getCmp(moduleName);
+    var store = grid.getStore();
+    console.debug(store.getModifiedRecords());
+    // store.add({});
+    store.insert(0, {id: 'add'});
+    grid.getPlugin('rowediting').startEdit(0, 0);
+  },
+  delHandler: function () {
+    var grid = Ext.getCmp(moduleName);
+    var selection = grid.getSelectionModel().getSelection()[0];
+
+    console.log(selection);
+    Ext.Ajax.request({
+      url: '/execute/del',
+      params: selection.data,
+      success: function (response) {
+        var result = Ext.decode(response.responseText);
+        if (result.success) {
+          //重新排序，防止出现错位现象
+          grid.store.sort('id', 'DESC');
+        }
+      }
     });
   },
   listeners: {
@@ -373,54 +473,6 @@ Ext.define('Ext.ux.GridView', {
   }
 });
 
-/*
- // 自定义属性---------------------------------------------------------------------------------------------------------
- url: null, // 页面请求的URL
- dictUrl: ctx + "/dictionary/loadDictionary.do", // 字典请求URL
- dictLoad: true, // 是否加载字典
- beforeRequest: null, // 请求前的操作
- reasonUrl: null, // 说明的提交入口
- addReason: false, // 新增是否需要填写说明
- editReason: false, // 修改是否需要填写说明
- delReason: false, //  删除是否需要填写说明
- addReduction: false,
- editUrl: null, // 编辑提交的url入口
- storeFields: null, // store的字段
- startLoad: true,  // 是否进行load
- inViewportShow: false, // 自定义属性，视图设置
- navGrid: null, // 自定义属性
- viewport: null, //
- searchFieldCombobox: null,
- autoTbar: true,
- hasRightMenu: true,
- addButton: null,
- editButton: null,
- delButton: null,
- logicDelButton: null,
- clinicalSubmitButton: null,
- addHandler: null,
- editHandler: null,
- delHandler: null,
- logicDelHandler: null,
- clinicalSubmitHandler: null,
- sortname: null, // 在store中设置，排序的名称
- sortorder: null, // 在store中设置，排序的方式 desc/asc
- dictionaryParams: null,
- hasPagingToolbar: true,
- editWinWidth: 450,
- // 原始属性-----------------------------------------------------------------------------------------------------------
- forceFit: true, // 设置为true，则强制列自适应成可用宽度
- rootVisible: false, // 隐藏根节点
- loadMask: true, //
- useArrows: true, // 在tree中使用Vista-style样式的箭头
- scroll: true, //
- autoScroll: true, // 溢出，展示滚动条
- rowLines: true, // 设置为false则取消行的框线样式
- pageSize: 30, // 在store中设置每页每页显示多少条
- columnLines: true, // 添加列的框线样式
- enableColumnHide: false, // 设置为false则禁用隐藏表格中的列
- alignrightside: false, //是否加入右对齐
- isInitToolTip: true,*/
 
 Ext.define('Ext.ux.Combobox', {
   extend: 'Ext.form.field.ComboBox',

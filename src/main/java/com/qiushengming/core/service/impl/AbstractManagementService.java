@@ -13,7 +13,7 @@ import java.util.List;
  * @author qiushengming
  * @date 2018/5/24.
  */
-public class AbstractManagementService<T extends BaseEntity>
+public abstract class AbstractManagementService<T extends BaseEntity>
         extends AbstractQueryService<T>
         implements ManagementService<T> {
 
@@ -24,20 +24,20 @@ public class AbstractManagementService<T extends BaseEntity>
 
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
-    public int add(BaseEntity baseDomain) {
+    public int add(T baseDomain) {
         return getDao().add(baseDomain);
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
-    public int update(BaseEntity baseDomain) {
+    public int update(T baseDomain) {
         return getDao().update(baseDomain);
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
-    public int deleteById(String id) {
-        return getDao().delete(id, getEntityClass());
+    public int delete(T baseDomain) {
+        return getDao().delete(baseDomain.getId(), baseDomain.getClass());
     }
 
     @Override
@@ -48,19 +48,19 @@ public class AbstractManagementService<T extends BaseEntity>
 
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
-    public int add(List baseDomains) {
+    public int add(List<T> baseDomains) {
         return 0;
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
-    public int update(List baseDomains) {
+    public int update(List<T> baseDomains) {
         return 0;
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
-    public int delete(List baseDomains) {
+    public int delete(List<T> baseDomains) {
         return 0;
     }
 }

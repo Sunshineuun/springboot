@@ -130,7 +130,7 @@ public class MinnieDaoImpl
      * @return 失败返回0;成功返回1
      */
     @Override
-    public <T> int delete(Serializable id, T o) {
-        return session.deleteById(id, o.getClass());
+    public int delete(Serializable id, Class<?> o) {
+        return session.deleteById(id, o);
     }
 }

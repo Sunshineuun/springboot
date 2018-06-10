@@ -10,9 +10,9 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
  * @author MinMin
  */
 @SpringBootApplication(exclude = {
-        HibernateJpaAutoConfiguration.class,
-        MongoAutoConfiguration.class,
-        SecurityAutoConfiguration.class})
+    HibernateJpaAutoConfiguration.class,
+    MongoAutoConfiguration.class,
+    SecurityAutoConfiguration.class})
 public class SpringbootApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringbootApplication.class, args);
