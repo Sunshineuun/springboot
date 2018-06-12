@@ -6,6 +6,7 @@ import com.qiushengming.entity.code.MinNieResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.UUID;
 
@@ -25,14 +26,14 @@ public abstract class BaseManagementController<T extends BaseEntity>
      */
     protected abstract ManagementService<T> getManagementService();
 
-    @RequestMapping("/execute/edit")
+    @RequestMapping(value = "/edit", method = RequestMethod.PUT)
     public MinNieResponse edit(T object) {
         logger.debug("{}", object);
         int states = getManagementService().update(object);
         return new MinNieResponse(states == 1, "编辑", states);
     }
 
-    @RequestMapping("/execute/add")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public MinNieResponse add(T object) {
         logger.debug("{}", object);
         object.setId(generateId());
@@ -41,14 +42,21 @@ public abstract class BaseManagementController<T extends BaseEntity>
         return new MinNieResponse(states == 1, "新增", states);
     }
 
-    @RequestMapping("/execute/del")
+    @RequestMapping(value = "/del", method = RequestMethod.POST)
     public MinNieResponse del(T object) {
         logger.debug("{}", object);
         int states = getManagementService().delete(object);
         return new MinNieResponse(states == 1, "删除", states);
     }
 
-    protected String generateId(){
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public MinNieResponse list() {
+        return new MinNieResponse(true,
+            "success",
+            getManagementService().getAll());
+    }
+
+    protected String generateId() {
         return UUID.randomUUID().toString();
     }
 }

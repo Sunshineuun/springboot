@@ -2,6 +2,7 @@ package com.qiushengming.entity;
 
 import com.qiushengming.annotation.Column;
 import com.qiushengming.annotation.Table;
+import org.apache.ibatis.type.JdbcType;
 
 import java.util.Date;
 
@@ -31,12 +32,39 @@ public class DataLog
     /**
      * 创建时间
      */
-    private Date createDate;
+    private Date createDate = new Date();
 
     /**
      * 操作人
      */
-    private String by;
+    private String createBy;
+
+    /**
+     * 在操作
+     */
+    private String type;
+
+    /**
+     * 请求的IP地址
+     */
+    private String ip;
+
+    /**
+     * 执行的方法
+     */
+    private String method;
+
+    public DataLog(String entity, String targetId,
+        Class<? extends BaseEntity> targetClass, String by, String type,
+        String ip, String method) {
+        this.entity = entity;
+        this.targetId = targetId;
+        this.targetClass = targetClass.getName();
+        this.createBy = by;
+        this.type = type;
+        this.ip = ip;
+        this.method = method;
+    }
 
     public String getEntity() {
         return entity;
@@ -64,7 +92,9 @@ public class DataLog
         this.targetId = targetId;
     }
 
-    @Column("CREATE_DATE")
+    @Column(value = "CREATE_DATE",
+        isUpdate = false,
+        jdbcType = JdbcType.TIMESTAMP)
     public Date getCreateDate() {
         return createDate;
     }
@@ -73,11 +103,36 @@ public class DataLog
         this.createDate = createDate;
     }
 
-    public String getBy() {
-        return by;
+    @Column("CREATE_BY")
+    public String getCreateBy() {
+        return createBy;
     }
 
-    public void setBy(String by) {
-        this.by = by;
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 }

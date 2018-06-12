@@ -149,6 +149,14 @@ public class BaseController {
         return "forward:" + path;
     }
 
+    /**
+     * 获取请求的IP地址
+     * @return IP地址
+     */
+    protected String getIpAddr() {
+        return WebUtils.getIpAddr(getRequest());
+    }
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         IntEditor intEditor = new IntEditor();

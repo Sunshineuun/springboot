@@ -14,7 +14,7 @@ CREATE TABLE GRID_VIEW_CONFIGURE (
 ALTER TABLE GRID_VIEW_CONFIGURE
   ADD (ENABLE_LOCKING TINYINT (1) DEFAULT 0);
 INSERT INTO grid_view_configure (ID, MODULE_NAME, URL)
-VALUES ('1', 'Book', '/getBooks');
+VALUES ('1', 'Book', '/book');
 
 CREATE TABLE EXT_COULUMN (
   ID         VARCHAR(36) PRIMARY KEY,
@@ -59,7 +59,7 @@ CREATE TABLE EXT_PLUGIN (
 );
 INSERT INTO EXT_PLUGIN (ID, MODULE_ID, PTYPE, CONFIG)
 VALUES (REPLACE(UUID(), '-', ''), '1', 'rowediting',
-        '{"clicksToEdit": 5,saveBtnText: "保存","cancelBtnText": "取消", "errorsText": "错误", "dirtyText": "你要确认或取消更改"}');
+        '{"id":"rowediting","clicksToEdit": 5,saveBtnText: "保存","cancelBtnText": "取消", "errorsText": "错误", "dirtyText": "你要确认或取消更改"}');
 
 -- 字典
 CREATE TABLE DICTIONARY (
@@ -75,3 +75,14 @@ VALUES ('1ed2343eb6cb10369c96c62771c06ee8', '1', '仓库', NULL, 'TYPE', 0);
 INSERT INTO dictionary (ID, VALUE, NAME, REMARK, TYPE_CODE, VIEW_ORDER)
 VALUES ('3ae87123b6cb10369c96c62771c06ee8', '2', '出借', NULL, 'TYPE', 1);
 
+CREATE TABLE SP_DATA_LOG (
+  ID           VARCHAR(36) PRIMARY KEY,
+  TARGET_ID    VARCHAR(36)   NOT NULL,
+  ENTITY       VARCHAR(4000) NOT NULL,
+  TARGET_CLASS VARCHAR(255)  NOT NULL,
+  TYPE         VARCHAR(36)   NOT NULL,
+  IP           VARCHAR(255),
+  METHOD       VARCHAR(255) NOT NULL,
+  CREATE_BY    VARCHAR(36)   NOT NULL,
+  CREATE_DATE  TIMESTAMP     NOT NULL DEFAULT now()
+);

@@ -15,16 +15,12 @@ import javax.annotation.Resource;
  * @date 2018/4/22
  */
 @RestController
+@RequestMapping("/book")
 public class BookController
     extends BaseManagementController<Book> {
 
     @Resource(name = "bookService")
     private BookService service;
-
-    @RequestMapping("/getBooks")
-    public MinNieResponse getBooks() {
-        return new MinNieResponse(true, "success", service.getAll());
-    }
 
     @RequestMapping("/getHistoryBook")
     public MinNieResponse getHistoryBook() {

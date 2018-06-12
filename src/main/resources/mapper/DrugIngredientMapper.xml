@@ -80,7 +80,7 @@
       <include refid="Example_Where_Clause" />
     </if>
     <if test="orderByClause != null" >
-      order by ${orderByClause}
+      order createBy ${orderByClause}
     </if>
   </select>
   <delete id="deleteByExample" parameterType="com.qiushengming.entity.DrugIngredientExample" >
@@ -90,9 +90,9 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.qiushengming.entity.DrugIngredient" >
-    insert into QSM_DRUG_INGREDIENT (ID, NAME, PINYIN_CODE, 
+    insert into QSM_DRUG_INGREDIENT (ID, NAME, PINYIN_CODE,
       TYPE)
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{pinyinCode,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{pinyinCode,jdbcType=VARCHAR},
       #{type,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qiushengming.entity.DrugIngredient" >

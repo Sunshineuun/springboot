@@ -251,13 +251,13 @@ Ext.define('Ext.ux.GridView', {
       remoteSort: true, // 设置为 true 则将所有的排序操作推迟到服务器. 如果设置为 false, 则在客户端本地排序
       proxy: {
         type: 'ajax',
-        url: me.url,
+        url: me.url + '/list',
         timeout: 600000,
         actionMethods: {
           create: 'POST',
-          read: 'POST',
-          update: 'POST',
-          destroy: 'POST'
+          read: 'GET',
+          update: 'PUT',
+          destroy: 'DELETE'
         },
         reader: { // TODO
           type: 'json',
@@ -299,18 +299,24 @@ Ext.define('Ext.ux.GridView', {
   submitHandler: function (editor, e, eOpts) {
     //rowediiting 提交逻辑
     //获取record
+    var me = this;
     var formData = e.record.getData();
     var grid = Ext.getCmp(moduleName);
-    var url = '/execute/edit';
+    var url = me.url +'/edit';
+    var method = 'PUT';
     console.debug(formData);
 
     if (formData['id'] === 'add') {
-      url = '/execute/add';
+      url = me.url +'/add';
+      method = 'POST';
     }
+
+    console.log(url);
 
     Ext.Ajax.request({
       url: url,
       params: formData,
+      method: method,
       success: function (response) {
         var result = Ext.decode(response.responseText);
         if (result.success) {
@@ -339,10 +345,10 @@ Ext.define('Ext.ux.GridView', {
     var grid = Ext.getCmp(moduleName);
     var selection = grid.getSelectionModel().getSelection()[0];
 
-    console.log(selection);
     Ext.Ajax.request({
-      url: '/execute/del',
+      url: grid.url + '/del',
       params: selection.data,
+      method: 'POST',
       success: function (response) {
         var result = Ext.decode(response.responseText);
         if (result.success) {

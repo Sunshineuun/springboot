@@ -95,7 +95,7 @@ spring:
         useGlobalDataSourceStat: true
   redis:
     database: 1
-    host: 192.168.5.94 # 192.68.5.94
+    host: 192.168.5.94 #127.0.0.1 # 192.68.5.94
     port: 6379
     password:
     jedis:
