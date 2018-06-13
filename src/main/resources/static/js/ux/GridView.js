@@ -9,7 +9,7 @@ Ext.define('Ext.ux.GridView', {
   // 自定义属性---------------------------------------------------------------------------------------------------------
   moduleName: '',
   url: '',
-  inViewportShow: false, // 是否在窗口显示
+  inViewportShow: false, // 是否创建视图
   configure: null,
   pageSize: 30, // 每页显示条数
   sorters: [],
@@ -17,7 +17,7 @@ Ext.define('Ext.ux.GridView', {
   roweditable: false, // 是否启用行编辑模式
   dictLoad: true,
   dictUrl: '/loadDictionary',
-  dictionaryParams: [],
+  dictionaryParams: '',
   hasRightMenu: true,
   navGrid: {
     addText: '新增',
@@ -27,7 +27,7 @@ Ext.define('Ext.ux.GridView', {
     }
   },
   // 原始属性-----------------------------------------------------------------------------------------------------------
-  id: moduleName,
+  id: this.moduleName,
   columns: [],
   plugins: [],
   forceFit: true,
@@ -73,12 +73,13 @@ Ext.define('Ext.ux.GridView', {
      }*/
 
     var params = {};
+    var d = me.dictionaryParams.split('#');
 
-    if (me.dictionaryParams[0]) {
-      params["typeCodeStr"] = array2Str(me.dictionaryParams[0]);
+    if (d[0]) {
+      params["typeCodeStr"] = d[0];
     }
-    if (me.dictionaryParams[1]) {
-      params["queryIdStr"] = array2Str(me.dictionaryParams[1]);
+    if (d[1]) {
+      params["queryIdStr"] = d[1];
     }
 
     if (!Ext.isEmpty(params)) {
@@ -137,7 +138,7 @@ Ext.define('Ext.ux.GridView', {
 
     var keys = ['forceFit', 'autoScroll', 'rowLines',
       'columnLines', 'pageSize', 'enableColumnHide',
-      'url', 'sorters', 'startLoad'];
+      'url', 'sorters', 'startLoad', 'inViewportShow', 'dictionaryParams'];
 
     Ext.Array.forEach(keys, function (value, index) {
       me[value] = configure[value];
@@ -302,12 +303,12 @@ Ext.define('Ext.ux.GridView', {
     var me = this;
     var formData = e.record.getData();
     var grid = Ext.getCmp(moduleName);
-    var url = me.url +'/edit';
+    var url = me.url + '/edit';
     var method = 'PUT';
     console.debug(formData);
 
     if (formData['id'] === 'add') {
-      url = me.url +'/add';
+      url = me.url + '/add';
       method = 'POST';
     }
 
@@ -602,6 +603,7 @@ Ext.define('Ext.ux.Combobox', {
           }
         }
       });
+      me.store.load();
     }
   },
   queryMode: 'local',
