@@ -63,6 +63,11 @@ public class GridViewConfigure
     private boolean enableLocking = false;
 
     /**
+     * 是否创建视图
+     */
+    private boolean inViewportShow = true;
+
+    /**
      * 每页展示多少数据。
      */
     private int pageSize = 25;
@@ -90,6 +95,17 @@ public class GridViewConfigure
      * 提供插件
      */
     private List<ExtPlugin> plugins = new ArrayList<>();
+
+    /**
+     * 字典
+     * 规约：分为两种类型的字典，typeCode|queryId。
+     *  typeCode，通过编码在字典表中查找。
+     *  queryId，通过制定脚本去查询，脚本编写在Dictionary.xml中。
+     * 示例： typeCode1,typeCode2#queryId1,queryId
+     * 按照以上示例进行拼接参数。同一类型用逗号分隔，不同类型用#分隔。
+     * #分隔，类型的顺序typeCode1,queryId
+     */
+    private String dictionaryParams = "";
 
     @Column(value = "MODULE_NAME")
     public String getModuleName() {
@@ -151,6 +167,15 @@ public class GridViewConfigure
 
     public void setEnableLocking(boolean enableLocking) {
         this.enableLocking = enableLocking;
+    }
+
+    @Column("IN_VIEWPORT_SHOW")
+    public boolean isInViewportShow() {
+        return inViewportShow;
+    }
+
+    public void setInViewportShow(boolean inViewportShow) {
+        this.inViewportShow = inViewportShow;
     }
 
     @Column("PAGE_SIZE")
@@ -223,5 +248,14 @@ public class GridViewConfigure
 
     public void setPlugins(List<ExtPlugin> plugins) {
         this.plugins = plugins;
+    }
+
+    @Column("DICTIONARY_PARAMS")
+    public String getDictionaryParams() {
+        return dictionaryParams;
+    }
+
+    public void setDictionaryParams(String dictionaryParams) {
+        this.dictionaryParams = dictionaryParams;
     }
 }
