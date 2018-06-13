@@ -5,12 +5,7 @@ Ext.onReady(function () {
     moduleName: 'Book'
   });*/
 
-  Ext.create("Ext.container.Viewport", {
-    layout: 'fit',
-    items: {
-      xtype: 'uxgridview',
-      moduleName: moduleName,
-      dictionaryParams: [['TYPE'],[]] //TODO
-    }
+  Ext.create("Ext.ux.GridView", {
+    moduleName: moduleName
   });
 });

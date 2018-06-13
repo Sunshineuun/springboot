@@ -1,29 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head >
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head th:include="common" >
   <meta charset="UTF-8" >
   <title >app</title >
-  <!-- 引入ExtJs样式 -->
-  <link rel="stylesheet" type="text/css"
-        href="../../static/js/extjs/build/classic/resources/theme-crisp-all.css" >
-  <!-- 引入ExtJs核心Js -->
-  <script type="text/javascript"
-          src="../../static/js/extjs/ext-bootstrap.js" ></script >
-  <script type="text/javascript"
-          src="../../static/js/extjs/build/ext-all-debug.js" ></script >
-  <script type="text/javascript"
-          src="../../static/js/extjs/build/classic/locale/locale-zh_CN.js" ></script >
-  <!-- 框架js -->
-  <script type="text/javascript" src="../../static/js/ux/GridView.js" ></script >
-  <script type="text/javascript" src="../../static/js/app/warn.js" ></script >
-  <script type="text/javascript" src="../../static/js/app/commons.js" ></script >
-  <!-- 页面Js -->
-  <script type="text/javascript" src="../../static/js/app/book/index.js" ></script >
-  <script type="text/javascript">
-    var dictionary = {};
-  </script>
 </head >
 <body >
-<div id="app"></div>
+<!-- 页面Js -->
+<script type="text/javascript"
+        th:src="@{/static/js/app/book/index.js}" ></script >
 </body >
 </html >
