@@ -2,11 +2,21 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
 >
-<head th:include="common">
+<head th:include="common" >
   <meta charset="UTF-8" >
   <title >app</title >
 </head >
 <body >
-<script type="text/javascript" th:src="@{/static/js/app.js}" ></script >
+<ul >
+  <li >
+    <a href="book/history.html" >借书历史</a >
+  </li >
+  <li >
+    <a href="book/index.html" >书本列表</a >
+  </li >
+  <li >
+    <a href="tools/jsonformat.html" >json格式化工具</a >
+  </li >
+</ul >
 </body >
 </html >
