@@ -44,4 +44,9 @@ public class ForwardController extends BaseController {
         logger.info("访问路径：{}", path);
         return path;
     }
+
+    @RequestMapping("/")
+    public void index() {
+        redirect("/forward/index");
+    }
 }
