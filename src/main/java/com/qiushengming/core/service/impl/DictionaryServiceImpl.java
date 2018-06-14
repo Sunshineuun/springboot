@@ -45,9 +45,10 @@ public class DictionaryServiceImpl
         return warp(getDao().query(queryId));
     }
 
-    private Map<String, String> warp(List<Map<String, Object>> selectList) {
+    private Map<String, String> warp(List<Map> selectList) {
         Map<String, String> result = new LinkedHashMap<>();
-        for (Map<String, Object> map : selectList) {
+        for (Map map : selectList) {
+            // Map map = (Map)obj;
             if (map == null) {
                 continue;
             }
