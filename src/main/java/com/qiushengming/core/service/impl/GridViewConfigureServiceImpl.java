@@ -1,9 +1,11 @@
 package com.qiushengming.core.service.impl;
 
 import com.qiushengming.core.service.ExtColumnService;
+import com.qiushengming.core.service.ExtFeatureService;
 import com.qiushengming.core.service.ExtPluginService;
 import com.qiushengming.core.service.GridViewConfigureService;
 import com.qiushengming.entity.extjs.ExtColumn;
+import com.qiushengming.entity.extjs.ExtFeature;
 import com.qiushengming.entity.extjs.ExtPlugin;
 import com.qiushengming.entity.extjs.GridViewConfigure;
 import com.qiushengming.mybatis.support.Criteria;
@@ -29,6 +31,9 @@ public class GridViewConfigureServiceImpl
     @Resource(name = "extPluginService")
     private ExtPluginService extPluginService;
 
+    @Resource(name = "extFeatureService")
+    private ExtFeatureService extFeatureService;
+
     /**
      * 通过模块名称，获取模块配置信息。 <br>
      * 模块名称为唯一标识
@@ -48,9 +53,15 @@ public class GridViewConfigureServiceImpl
             extColumnService.findModuleIdByColumns(configure.getId());
         configure.setColumns(columns);
 
+        // 查询插件
         List<ExtPlugin> plugins =
-            extPluginService.findModuleIdByColumns(configure.getId());
+            extPluginService.findModuleIdByPlugin(configure.getId());
         configure.setPlugins(plugins);
+
+        // 查询 feature(特征)
+        List<ExtFeature> features =
+            extFeatureService.findModuleIdByFeatures(configure.getId());
+        configure.setFeatures(features);
 
         return configure;
     }

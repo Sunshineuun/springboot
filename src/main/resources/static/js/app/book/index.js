@@ -6,8 +6,7 @@ Ext.onReady(function () {
    });*/
 
   Ext.create("Ext.ux.GridView", {
-    moduleName: moduleName,
-    dictionaryParams: [['TYPE'],[]] //TODO
+    moduleName: moduleName
   });
 });
 

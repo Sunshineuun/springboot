@@ -33,6 +33,16 @@ public class ExtColumn extends BaseEntity {
     private String dataIndex;
 
     /**
+     * 组件类型
+     */
+    private String xtype = "textfield";
+
+    /**
+     * 根据指定的格式将对象格式化。
+     */
+    private String format;
+
+    /**
      * 指定为 true 来约束拖动列不能拖出当前的专栏. <br>
      * 请注意，此配置只适用于列标题包含子列标题的情况下, <br>
      * 值：true or false
@@ -77,7 +87,7 @@ public class ExtColumn extends BaseEntity {
     /**
      * 列自定义渲染，值是一个函数。
      */
-    private String rendererFun = "return \"#\";";
+    private String rendererFun = "return value;";
 
     /**
      * 行编辑模式中，当前类编辑框的类型
@@ -114,6 +124,22 @@ public class ExtColumn extends BaseEntity {
 
     public void setDataIndex(String dataIndex) {
         this.dataIndex = dataIndex;
+    }
+
+    public String getXtype() {
+        return xtype;
+    }
+
+    public void setXtype(String xtype) {
+        this.xtype = xtype;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     public boolean isSealed() {

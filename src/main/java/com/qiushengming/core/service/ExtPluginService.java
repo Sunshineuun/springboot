@@ -16,6 +16,6 @@ public interface ExtPluginService
      * @param moduleId 模块ID{@link com.qiushengming.entity.extjs.GridViewConfigure#id}
      * @return {@link ExtPlugin}列表
      */
-    List<ExtPlugin> findModuleIdByColumns(String moduleId);
+    List<ExtPlugin> findModuleIdByPlugin(String moduleId);
 
 }

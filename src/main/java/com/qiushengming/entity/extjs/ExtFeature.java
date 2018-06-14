@@ -12,17 +12,17 @@ import java.util.Map;
 
 /**
  * @author qiushengming
- * @date 2018/5/30
+ * @date 2018/6/14
  */
-@Table(value = "EXT_PLUGIN", resultMapId = "ExtPluginMap")
-public class ExtPlugin
+@Table(value = "EXT_FEATURE", resultMapId = "ExtFeatureMap")
+public class ExtFeature
     extends BaseEntity {
 
     @NotNull(message = "模块ID不为空")
     private String moduleId;
 
-    @NotNull(message = "插件类型不能为空#ptype")
-    private String ptype;
+    @NotNull(message = "插件类型不能为空#ftype")
+    private String ftype;
 
     private String config;
 
@@ -37,12 +37,12 @@ public class ExtPlugin
         this.moduleId = moduleId;
     }
 
-    public String getPtype() {
-        return ptype;
+    public String getFtype() {
+        return ftype;
     }
 
-    public void setPtype(String ptype) {
-        this.ptype = ptype;
+    public void setFtype(String ftype) {
+        this.ftype = ftype;
     }
 
     public String getConfig() {
@@ -54,7 +54,7 @@ public class ExtPlugin
         if (StringUtils.isEmpty(config)) {
             return;
         }
-        setConfigMap((Map<String, Object>)Json.stringToMap(config));
+        setConfigMap((Map<String, Object>) Json.stringToMap(config));
     }
 
     @Exclude

@@ -19,31 +19,44 @@ ALTER TABLE GRID_VIEW_CONFIGURE
 -- DICTIONARY_PARAMS
 ALTER TABLE GRID_VIEW_CONFIGURE
   ADD (DICTIONARY_PARAMS VARCHAR(255) DEFAULT '');
-UPDATE grid_view_configure SET DICTIONARY_PARAMS = 'TYPE#' WHERE ID = '1';
+UPDATE grid_view_configure
+SET DICTIONARY_PARAMS = 'TYPE#'
+WHERE ID = '1';
+-- START_LOAD
+ALTER TABLE GRID_VIEW_CONFIGURE
+  ADD (START_LOAD TINYINT (1) DEFAULT 1);
 
-INSERT INTO grid_view_configure (ID, MODULE_NAME, URL)
-VALUES ('1', 'Book', '/book');
+INSERT INTO grid_view_configure (ID, MODULE_NAME, URL, DICTIONARY_PARAMS)
+VALUES ('1', 'Book', '/book', 'TYPE#');
+-- BookHistory
+INSERT INTO grid_view_configure (ID, MODULE_NAME, URL, DICTIONARY_PARAMS)
+VALUES ('2', 'BookHistory', '/bookHistory', 'TYPE#');
 
+--------------------------------------------------------------------------------
 CREATE TABLE EXT_COULUMN (
   ID         VARCHAR(36) PRIMARY KEY,
   MODULE_ID  VARCHAR(255)              NOT NULL,
   HEADER     VARCHAR(255) DEFAULT '默认' NOT NULL,
   DATA_INDEX VARCHAR(255)              NOT NULL,
-  SEALED     TINYINT (1) NOT NULL DEFAULT 0,
-  HIDDEN     TINYINT (1) NOT NULL DEFAULT 0,
-  HIDEABLE   TINYINT (1) NOT NULL DEFAULT 1,
-  SORTABLE   TINYINT (1) NOT NULL DEFAULT 1,
-  GROUPABLE  TINYINT (1) NOT NULL DEFAULT 1,
+  SEALED     TINYINT(1)                NOT NULL DEFAULT 0,
+  HIDDEN     TINYINT(1)                NOT NULL DEFAULT 0,
+  HIDEABLE   TINYINT(1)                NOT NULL DEFAULT 1,
+  SORTABLE   TINYINT(1)                NOT NULL DEFAULT 1,
+  GROUPABLE  TINYINT(1)                NOT NULL DEFAULT 1,
   WIDTH      SMALLINT                  NOT NULL DEFAULT 125
 );
 ALTER TABLE EXT_COULUMN
   ADD (EDITOR VARCHAR(500) DEFAULT '{"xtype": "textfield"}');
 ALTER TABLE EXT_COULUMN
-  ADD (ORDER_INDEX TINYINT (5) DEFAULT 0);
+  ADD (ORDER_INDEX TINYINT(5) DEFAULT 0);
 ALTER TABLE EXT_COULUMN
-  ADD (RENDERER_FUN VARCHAR(500) DEFAULT 'return \"#\";');
+  ADD (RENDERER_FUN VARCHAR(500) DEFAULT 'return value;');
 ALTER TABLE EXT_COULUMN
-  ADD (LOCKED TINYINT (1) DEFAULT 0);
+  ADD (LOCKED TINYINT(1) DEFAULT 0);
+ALTER TABLE EXT_COULUMN
+  ADD (XTYPE VARCHAR(36) DEFAULT 'gridcolumn');
+ALTER TABLE EXT_COULUMN
+  ADD (FORMAT VARCHAR(36));
 
 INSERT INTO EXT_COULUMN (ID, MODULE_ID, ORDER_INDEX, HEADER, DATA_INDEX, HIDDEN, HIDEABLE)
 VALUES (REPLACE(UUID(), '-', ''), '1', 0, 'ID', 'id', 1, 0);
@@ -55,8 +68,26 @@ INSERT INTO EXT_COULUMN (ID, MODULE_ID, ORDER_INDEX, HEADER, DATA_INDEX, GROUPAB
 VALUES (REPLACE(UUID(), '-', ''), '1', 4, '归属', 'affiliation', 0);
 INSERT INTO EXT_COULUMN (ID, MODULE_ID, ORDER_INDEX, HEADER, DATA_INDEX, EDITOR, RENDERER_FUN)
 VALUES
-  (REPLACE(UUID(), '-', ''), '1', 5, '占用', 'occupy', '{"xtype": "uxcombobox", "url": "/getDictionaryByTypeCode/TYPE"}',
-   'return formatter("TYPE", "#");');
+  (REPLACE(UUID(), '-', ''), '1', 5, '占用', 'occupy',
+   '{"xtype": "uxcombobox", "url": "/getDictionaryByTypeCode/TYPE"}',
+   'return formatter("TYPE", value);');
+INSERT INTO EXT_COULUMN (ID, MODULE_ID, ORDER_INDEX, HEADER, DATA_INDEX, HIDDEN, HIDEABLE)
+VALUES (REPLACE(UUID(), '-', ''), '2', 0, 'ID', 'id', 1, 0);
+INSERT INTO EXT_COULUMN (ID, MODULE_ID, ORDER_INDEX, HEADER, DATA_INDEX, HIDDEN, HIDEABLE)
+VALUES (REPLACE(UUID(), '-', ''), '2', 1, '书名', 'bookId', 0, 0);
+INSERT INTO EXT_COULUMN (ID, MODULE_ID, ORDER_INDEX, HEADER, DATA_INDEX, HIDDEN, HIDEABLE)
+VALUES (REPLACE(UUID(), '-', ''), '2', 2, '借书人', 'borrower', 0, 0);
+INSERT INTO EXT_COULUMN (ID, MODULE_ID, ORDER_INDEX, HEADER, DATA_INDEX, HIDDEN, HIDEABLE, RENDERER_FUN)
+VALUES (REPLACE(UUID(), '-', ''), '2', 3, '是否还书', 'isEnable', 0, 0,
+        'return formatter("TYPE", value);');
+INSERT INTO EXT_COULUMN (ID, MODULE_ID, ORDER_INDEX, HEADER, DATA_INDEX, HIDDEN, HIDEABLE, XTYPE, FORMAT, EDITOR)
+VALUES
+  (REPLACE(UUID(), '-', ''), '2', 4, '开始日期', 'startDate', 0, 0, 'datecolumn',
+   'Y-m-d H:i:s', '{"xtype": "datefield"}');
+INSERT INTO EXT_COULUMN (ID, MODULE_ID, ORDER_INDEX, HEADER, DATA_INDEX, HIDDEN, HIDEABLE, XTYPE, FORMAT, EDITOR)
+VALUES (REPLACE(UUID(), '-', ''), '2', 5, '结束日期', 'endDate', 0, 0, 'datecolumn',
+        'Y-m-d H:i:s', '{"xtype": "datefield"}');
+
 
 -- 插件配置信息
 CREATE TABLE EXT_PLUGIN (
@@ -67,7 +98,7 @@ CREATE TABLE EXT_PLUGIN (
 );
 INSERT INTO EXT_PLUGIN (ID, MODULE_ID, PTYPE, CONFIG)
 VALUES (REPLACE(UUID(), '-', ''), '1', 'rowediting',
-        '{"id":"rowediting","clicksToEdit": 5,saveBtnText: "保存","cancelBtnText": "取消", "errorsText": "错误", "dirtyText": "你要确认或取消更改"}');
+        '{"id":"rowediting","clicksToEdit": 5,"saveBtnText": "保存","cancelBtnText": "取消", "errorsText": "错误", "dirtyText": "你要确认或取消更改"}');
 
 -- 字典
 CREATE TABLE DICTIONARY (
@@ -90,7 +121,18 @@ CREATE TABLE SP_DATA_LOG (
   TARGET_CLASS VARCHAR(255)  NOT NULL,
   TYPE         VARCHAR(36)   NOT NULL,
   IP           VARCHAR(255),
-  METHOD       VARCHAR(255) NOT NULL,
+  METHOD       VARCHAR(255)  NOT NULL,
   CREATE_BY    VARCHAR(36)   NOT NULL,
   CREATE_DATE  TIMESTAMP     NOT NULL DEFAULT now()
 );
+
+CREATE TABLE EXT_FEATURE (
+  ID        VARCHAR(36) PRIMARY KEY,
+  MODULE_ID VARCHAR(36) NOT NULL,
+  FTYPE     VARCHAR(36) NOT NULL,
+  CONFIG    VARCHAR(2000)
+);
+INSERT INTO EXT_FEATURE (ID, MODULE_ID, FTYPE, CONFIG)
+VALUES (REPLACE(UUID(), '-', ''), '2', 'groupingsummary',
+        '');
+

@@ -46,7 +46,7 @@ public class ForwardController extends BaseController {
     }
 
     @RequestMapping("/")
-    public void index() {
-        redirect("/forward/index");
+    public String index() {
+        return redirect("/forward/index");
     }
 }

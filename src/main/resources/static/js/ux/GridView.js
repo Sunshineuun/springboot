@@ -30,7 +30,9 @@ Ext.define('Ext.ux.GridView', {
   id: this.moduleName,
   columns: [],
   plugins: [],
+  features: [],
   forceFit: true,
+  split: true,
   initComponent: function () {
     var me = this;
 
@@ -51,6 +53,8 @@ Ext.define('Ext.ux.GridView', {
     me.initColumns();
     // 初始化插件
     me.initPlugins();
+    // 初始化features
+    me.initFeatures();
     // 初始化菜单
     me.initRightMenu();
     // 加载字典
@@ -165,11 +169,6 @@ Ext.define('Ext.ux.GridView', {
       renderer: function (value, metadata, record, rowIndex, columnIndex, store) {
         var page = store.lastOptions.page;
         var limit = store.lastOptions.limit;
-        /*if (record.raw['REVIEWING_IS'] === "0") {
-         return '<span style="color:red"> <strong>' + '*' + index + '</strong> </span>'
-         } else {
-         return index;
-         }*/
         return (page - 1) * limit + 1 + rowIndex;
       },
       listeners: {
@@ -181,18 +180,9 @@ Ext.define('Ext.ux.GridView', {
     me.columns.push(rowNumberer);
 
     Ext.Array.forEach(configure.columns, function (value, index, self) {
-      value.renderer = function (v) {
 
-        /**
-         *
-         * eval函数执行，代码需要已单引号引起来。
-         * 一大进步，知道怎么创建function对象。
-         */
-        var a = value.rendererFun.replace('#', v);
-        var func = new Function(a);
-        return func();
-        // return eval('\'' + a + '\'');
-      };
+      value.renderer = new Function("value", value.rendererFun);
+      value['id'] = 'column-' + value['id'];
       me.columns.push(value);
     });
   },
@@ -200,7 +190,17 @@ Ext.define('Ext.ux.GridView', {
     var me = this;
 
     Ext.Array.forEach(me.configure.plugins, function (value, index, self) {
+      var defaultConfig = {};
       if (value.ptype === 'rowediting') {
+        defaultConfig = {
+          id: "rowediting",
+          clicksToEdit: 2,
+          saveBtnText: "保存",
+          cancelBtnText: "取消",
+          errorsText: "错误",
+          dirtyText: "你要确认或取消更改"
+        };
+
         var listeners = {
           listeners: {
             edit: function (editor, e, eOpts) {
@@ -210,9 +210,31 @@ Ext.define('Ext.ux.GridView', {
         };
         Ext.apply(value, listeners);
       }
-      me.plugins.push(Ext.apply(value, value.configMap))
+      Ext.apply(defaultConfig, value);
+      Ext.apply(defaultConfig, value.configMap);
+      me.plugins.push(defaultConfig);
     });
 
+  },
+  initFeatures: function () {
+    var me = this;
+
+    Ext.Array.forEach(me.configure.features, function (value, index, self) {
+      var defaultConfig = {};
+      if (value.ftype === 'groupingsummary') {
+        defaultConfig = {
+          ftype: 'groupingsummary',
+          groupHeaderTpl: '{columnName}: {name} ({rows.length})',
+          showGroupsText: '取消分组',
+          groupByText: '分组',
+          startCollapsed: false
+        };
+      }
+
+      Ext.apply(defaultConfig, value);
+      Ext.apply(defaultConfig, value.configMap);
+      me.features.push(defaultConfig);
+    });
   },
   initRightMenu: function () {
     var me = this;
@@ -249,7 +271,7 @@ Ext.define('Ext.ux.GridView', {
     me.store = Ext.create('Ext.data.Store', {
       fields: fields,
       pageSize: me.pageSize,
-      remoteSort: true, // 设置为 true 则将所有的排序操作推迟到服务器. 如果设置为 false, 则在客户端本地排序
+      remoteSort: false, // 设置为 true 则将所有的排序操作推迟到服务器. 如果设置为 false, 则在客户端本地排序
       proxy: {
         type: 'ajax',
         url: me.url + '/list',
@@ -260,13 +282,15 @@ Ext.define('Ext.ux.GridView', {
           update: 'PUT',
           destroy: 'DELETE'
         },
-        reader: { // TODO
+        reader: {
           type: 'json',
           rootProperty: 'data'
         }
       },
       autoLoad: false,
       sorters: me.configure.sorters,
+      remoteGroup: false,
+      groupField: 'isEnable',
       listeners: {
         load: function (store, records, successful, eOpts) {
           if (successful === false) {

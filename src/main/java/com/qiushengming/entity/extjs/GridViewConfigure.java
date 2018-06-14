@@ -107,6 +107,10 @@ public class GridViewConfigure
      */
     private String dictionaryParams = "";
 
+    private List<ExtFeature> features = new ArrayList<>();
+
+    private boolean split = true;
+
     @Column(value = "MODULE_NAME")
     public String getModuleName() {
         return moduleName;
@@ -224,6 +228,7 @@ public class GridViewConfigure
         }
     }
 
+    @Column("START_LOAD")
     public boolean isStartLoad() {
         return startLoad;
     }
@@ -257,5 +262,14 @@ public class GridViewConfigure
 
     public void setDictionaryParams(String dictionaryParams) {
         this.dictionaryParams = dictionaryParams;
+    }
+
+    @Exclude
+    public List<ExtFeature> getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(List<ExtFeature> features) {
+        this.features = features;
     }
 }
