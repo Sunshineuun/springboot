@@ -1,13 +1,17 @@
 package com.qiushengming.core.controller;
 
 import com.qiushengming.core.service.ManagementService;
+import com.qiushengming.core.service.PagingService;
 import com.qiushengming.entity.BaseEntity;
 import com.qiushengming.entity.code.MinNieResponse;
+import com.qiushengming.entity.code.Page;
+import com.qiushengming.exception.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -15,7 +19,7 @@ import java.util.UUID;
  * @date 2018/6/8
  */
 public abstract class BaseManagementController<T extends BaseEntity>
-    extends BaseController {
+        extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -50,13 +54,20 @@ public abstract class BaseManagementController<T extends BaseEntity>
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public MinNieResponse list() {
-        return new MinNieResponse(true,
-            "success",
-            getManagementService().getAll());
+    public MinNieResponse list(Page<?> page) throws SystemException {
+        Map<String, Object> param = super.getRequestParameters();
+        page = getPagingService().findOnPage(param, page);
+        return new MinNieResponse(true, "success", page);
     }
 
     protected String generateId() {
         return UUID.randomUUID().toString();
+    }
+
+    protected PagingService getPagingService() {
+        if (!(getManagementService() instanceof PagingService)) {
+            throw new SystemException("当前Service没有实现PagingService接口，" + getManagementService().getClass().getName());
+        }
+        return ((PagingService) getManagementService());
     }
 }
