@@ -49,18 +49,21 @@ public abstract class AbstractManagementService<T extends BaseEntity>
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
     public int add(List<T> baseDomains) {
+        //TODO
         return 0;
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
     public int update(List<T> baseDomains) {
+        //TODO
         return 0;
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
     public int delete(List<T> baseDomains) {
+        //TODO
         return 0;
     }
 }

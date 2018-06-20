@@ -5,7 +5,7 @@ import com.qiushengming.annotation.Exclude;
 import com.qiushengming.annotation.Table;
 import com.qiushengming.entity.BaseEntity;
 import com.qiushengming.utils.Json;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;

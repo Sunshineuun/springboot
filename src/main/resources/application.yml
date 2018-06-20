@@ -1,6 +1,6 @@
 # 系统配置
 server:
-  port: 8083
+  port: 8085
   tomcat:
     uri-encoding: utf-8
 #debug: true

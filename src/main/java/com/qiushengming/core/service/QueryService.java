@@ -25,4 +25,5 @@ public interface QueryService<T extends BaseEntity> {
     T queryOneByCriteria(Criteria criteria);
 
     int countByCriteria(Criteria criteria);
+
 }

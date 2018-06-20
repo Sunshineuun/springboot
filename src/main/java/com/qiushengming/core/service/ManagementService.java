@@ -66,4 +66,5 @@ public interface ManagementService<T extends BaseEntity>
      * @return 删除成功的数量
      */
     int delete(List<T> baseDomains);
+
 }

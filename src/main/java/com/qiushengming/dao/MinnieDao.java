@@ -53,7 +53,21 @@ public interface MinnieDao {
      * @return <code>List<T></code>
      */
     <T> List<T> queryBySql(String sql, Class<T> clazz,
-        Map<String, Object> params);
+                           Map<String, Object> params);
+
+    /**
+     *
+     * @param sql sql
+     * @param params 查询参数
+     * @param offset 分页位移
+     * @param limit 限定长度
+     * @param <K> other
+     * @param <V> other
+     * @return 集合
+     */
+    <K, V> List<Map<K, V>> queryBySql(String sql, Map<String, Object> params, int offset, int limit);
+
+    int countBySql(String sql, Map<String, Object> params);
 
     /**
      * 通过{@link Criteria}组装的条件进行查询
@@ -113,8 +127,8 @@ public interface MinnieDao {
     /**
      * 删除对象
      *
-     * @param o   被删除的对象
-     * @param id  id
+     * @param o  被删除的对象
+     * @param id id
      * @return 失败返回0;成功返回1
      */
     int delete(Serializable id, Class<?> o);

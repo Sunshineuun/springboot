@@ -271,7 +271,7 @@ Ext.define('Ext.ux.GridView', {
     me.store = Ext.create('Ext.data.Store', {
       fields: fields,
       pageSize: me.pageSize,
-      remoteSort: false, // 设置为 true 则将所有的排序操作推迟到服务器. 如果设置为 false, 则在客户端本地排序
+      remoteSort: true, // 设置为 true 则将所有的排序操作推迟到服务器. 如果设置为 false, 则在客户端本地排序
       proxy: {
         type: 'ajax',
         url: me.url + '/list',

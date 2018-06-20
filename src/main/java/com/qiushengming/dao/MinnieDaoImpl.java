@@ -67,6 +67,16 @@ public class MinnieDaoImpl
     }
 
     @Override
+    public <K, V> List<Map<K, V>> queryBySql(String sql, Map<String, Object> params, int offset, int limit) {
+        return null;
+    }
+
+    @Override
+    public int countBySql(String sql, Map<String, Object> params) {
+        return 0;
+    }
+
+    @Override
     public <T> List<T> queryByCriteria(Criteria criteria, Class<T> clazz) {
         return session.queryByCriteria(criteria, clazz);
     }

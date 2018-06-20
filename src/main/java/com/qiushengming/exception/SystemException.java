@@ -1,21 +1,25 @@
 package com.qiushengming.exception;
 
-public class MybatisException extends RuntimeException {
+/**
+ * @author  qiushengming
+ * @date 2018/6/15.
+ */
+public class SystemException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public MybatisException() {
+    public SystemException() {
         super();
     }
 
-    public MybatisException(String message) {
+    public SystemException(String message) {
         super(message);
     }
 
-    public MybatisException(String message, Throwable cause) {
+    public SystemException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public MybatisException(Throwable cause) {
+    public SystemException(Throwable cause) {
         super(cause);
     }
 
