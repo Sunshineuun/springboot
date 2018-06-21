@@ -24,7 +24,7 @@ import java.util.Map;
  * @date 2018/4/14
  */
 public abstract class AbstractQueryService<T extends BaseEntity>
-        implements QueryService<T>, PagingService {
+    implements QueryService<T>, PagingService {
 
     /**
      * 日志记录
@@ -36,14 +36,14 @@ public abstract class AbstractQueryService<T extends BaseEntity>
 
     private Class entityClass;
 
-    protected MinnieDao getDao() {
+    MinnieDao getDao() {
         return dao;
     }
 
-    Class<T> getEntityClass() {
+    private Class<T> getEntityClass() {
         if (entityClass == null) {
             entityClass =
-                    GenericsUtils.getSuperClassGenricType(this.getClass());
+                GenericsUtils.getSuperClassGenricType(this.getClass());
         }
         return entityClass;
     }
@@ -84,12 +84,17 @@ public abstract class AbstractQueryService<T extends BaseEntity>
     }
 
     @Override
-    public Page findOnPage(Map<String, Object> params, Page<?> page) throws SystemException {
-        return findOnPage(getCountSql(params), getSearchSql(params), params, page);
+    public Page findOnPage(Map<String, Object> params, Page<?> page)
+        throws SystemException {
+        return findOnPage(getCountSql(params),
+            getSearchSql(params),
+            params,
+            page);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected Page<?> findOnPage(String countSql, String searchSql, Map<String, Object> params, Page page) {
+    private Page<?> findOnPage(String countSql, String searchSql,
+        Map<String, Object> params, Page page) {
         int totalCount;
         if (!StringUtils.isEmpty(countSql)) {
             countSql = addConditions(countSql, params);
@@ -106,20 +111,20 @@ public abstract class AbstractQueryService<T extends BaseEntity>
 
         // 查询数据
         StringBuilder searchSqlBuilder =
-                new StringBuilder(addConditions(searchSql, params));
+            new StringBuilder(addConditions(searchSql, params));
 
         if (StringUtils.isNotEmpty(page.getOrderBy())) {
             if (StringUtils.isNotEmpty(page.getOrder())) {
                 searchSqlBuilder.append(" order by ")
-                        .append(page.getOrderBy())
-                        .append(" ")
-                        .append(page.getOrder())
-                        .append(",1,2");
+                    .append(page.getOrderBy())
+                    .append(" ")
+                    .append(page.getOrder())
+                    .append(",1,2");
             } else {
                 searchSqlBuilder.append(" order by ")
-                        .append(page.getOrderBy())
-                        .append(" asc ")
-                        .append(",1,2");
+                    .append(page.getOrderBy())
+                    .append(" asc ")
+                    .append(",1,2");
             }
         }
 
@@ -127,10 +132,11 @@ public abstract class AbstractQueryService<T extends BaseEntity>
             logger.debug(searchSqlBuilder.toString());
         }
 
-        page.setResult(getDao().queryBySql(searchSqlBuilder.toString(),
-                params,
-                page.getPageSize() * (page.getPageNo() - 1),
-                page.getPageSize()));
+        page.setResult(getDao().queryBySql(getEntityClass(),
+            searchSqlBuilder.toString(),
+            params,
+            page.getPageSize() * (page.getPageNo() - 1),
+            page.getPageSize()));
 
         // 对查询结果进行加工
         findResultWarped(page);
@@ -142,18 +148,19 @@ public abstract class AbstractQueryService<T extends BaseEntity>
      * 加工查询出的数据
      *
      * @param page 结果
-     * @return page
      */
-    protected void findResultWarped(Page<?> page) {}
+    protected void findResultWarped(Page<?> page) {
+    }
 
     /**
      * 获取查询语句
      *
      * @param params 参数
      * @return search sql
-     * @throws Exception 异常
+     * @throws SystemException 系统错误
      */
-    protected String getSearchSql(Map<String, Object> params) throws SystemException {
+    protected String getSearchSql(Map<String, Object> params)
+        throws SystemException {
         Class<T> clazz = getEntityClass();
         if (clazz.isAnnotationPresent(Table.class)) {
             Table table = clazz.getAnnotation(Table.class);
@@ -172,9 +179,10 @@ public abstract class AbstractQueryService<T extends BaseEntity>
      *
      * @param params 阐述
      * @return count sql
-     * @throws Exception 异常
+     * @throws SystemException 系统错误
      */
-    protected String getCountSql(Map<String, Object> params) throws SystemException {
+    protected String getCountSql(Map<String, Object> params)
+        throws SystemException {
         Class<T> clazz = getEntityClass();
         if (clazz.isAnnotationPresent(Table.class)) {
             Table table = clazz.getAnnotation(Table.class);
