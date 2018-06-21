@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @Component
 public class MinnieDaoImpl
-        implements MinnieDao {
+    implements MinnieDao {
 
     @Resource(name = "objectSession")
     private ObjectSession session;
@@ -56,24 +56,31 @@ public class MinnieDaoImpl
 
     @Override
     public <K, V> List<Map<K, V>> queryBySql(String sql,
-                                             Map<String, Object> params) {
+        Map<String, Object> params) {
         return session.executeSelectListDynamic(sql, params);
     }
 
     @Override
     public <T> List<T> queryBySql(String sql, Class<T> clazz,
-                                  Map<String, Object> params) {
+        Map<String, Object> params) {
         return session.queryBySql(sql, clazz, params);
     }
 
     @Override
-    public <K, V> List<Map<K, V>> queryBySql(String sql, Map<String, Object> params, int offset, int limit) {
-        return null;
+    public <K, V> List<Map<K, V>> queryBySql(String sql,
+        Map<String, Object> params, int offset, int limit) {
+        return session.executeSelectListDynamic(sql, offset, limit, params);
+    }
+
+    @Override
+    public <T> List<T> queryBySql(Class clazz, String sql,
+        Map<String, Object> params, int offset, int limit) {
+        return session.executeSelectListDynamic(clazz, sql, offset, limit, params);
     }
 
     @Override
     public int countBySql(String sql, Map<String, Object> params) {
-        return 0;
+        return session.executeSelectCountDynamic(sql, params);
     }
 
     @Override
@@ -101,8 +108,11 @@ public class MinnieDaoImpl
     }
 
     @Override
-    public <T> List<T> query(String mybaitsId, Object params, int offset, int limit) {
-        return getSqlSession().selectList(mybaitsId, params, new RowBounds(offset, limit));
+    public <T> List<T> query(String mybaitsId, Object params, int offset,
+        int limit) {
+        return getSqlSession().selectList(mybaitsId,
+            params,
+            new RowBounds(offset, limit));
     }
 
     @Override
