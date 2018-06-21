@@ -1,7 +1,10 @@
 package com.qiushengming;
 
+import com.qiushengming.utils.JackJson;
+
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 public class Tests {
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
@@ -29,8 +32,13 @@ public class Tests {
             System.out.print("-");
             System.out.println(a);
         }*/
-        String t = "hello";
+        /*String t = "hello";
         char c[] = {'h', 'e', 'l', 'l', 'o'};
-        System.out.println(t.equals(c));
+        System.out.println(t.equals(c));*/
+
+        String s = "[{\"operator\":\"in\",\"value\":[\"1\"],\"property\":\"occupy\"}]";
+        List a = JackJson.fromJsonToObject(s, List.class);
+
+        System.out.println(a);
     }
 }

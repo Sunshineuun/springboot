@@ -8,6 +8,7 @@ logging:
   level:
     # 增加mybatis日志打印sql
     com.qiushengming.mapper: debug
+    com.qiushengming: debug
   pattern:
     console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%thread]){faint} %clr(%-40.40logger{39}){cyan} %L %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
   file: log\springboot.log
@@ -95,7 +96,7 @@ spring:
         useGlobalDataSourceStat: true
   redis:
     database: 1
-    host: 192.168.5.94 #127.0.0.1 # 192.68.5.94
+    host: 192.168.5.94 #127.0.0.1 # 192.168.5.94
     port: 6379
     password:
     jedis:

@@ -1,20 +1,25 @@
 package com.qiushengming.commons;
 
+import com.qiushengming.utils.JackJson;
+import org.apache.commons.lang3.StringUtils;
+
 import java.beans.PropertyEditorSupport;
+import java.util.List;
 
 /**
  * @author qiushengming
- * @date 2018/6/1
+ * @date 2018/6/21
  */
-public final class BooleanEditor extends PropertyEditorSupport {
+public class ListEditor
+    extends PropertyEditorSupport {
 
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
-        if ("true".equals(text) || "on".equals(text) || "1".equals(text)) {
-            setValue(true);
-        } else {
-            setValue(false);
+        if (StringUtils.isEmpty(text)) {
+            text = "[]";
         }
+
+        setValue(JackJson.fromJsonToObject(text, List.class));
     }
 
     @Override

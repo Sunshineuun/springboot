@@ -314,6 +314,11 @@ Ext.define('Ext.ux.GridView', {
               error("服务器出错！");
             }
           }
+        },
+        beforeload: function (store, operation, eOpts) {
+          console.log(store);
+          console.log(operation);
+          console.log(eOpts);
         }
       }
     });

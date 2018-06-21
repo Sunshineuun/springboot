@@ -95,6 +95,8 @@ public abstract class AbstractQueryService<T extends BaseEntity>
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Page<?> findOnPage(String countSql, String searchSql,
         Map<String, Object> params, Page page) {
+        GridSQLBuilder.buildSqlFragmentAndParams(page);
+
         int totalCount;
         if (!StringUtils.isEmpty(countSql)) {
             countSql = addConditions(countSql, params);
@@ -202,7 +204,6 @@ public abstract class AbstractQueryService<T extends BaseEntity>
         if (StringUtils.isNotEmpty(sqlFragment)) {
             sqlBuilder.append(" WHERE ").append(sqlFragment);
         }
-
         return sqlBuilder.toString();
     }
 }

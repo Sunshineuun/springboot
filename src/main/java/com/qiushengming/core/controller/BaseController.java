@@ -3,6 +3,7 @@ package com.qiushengming.core.controller;
 import com.qiushengming.commons.BooleanEditor;
 import com.qiushengming.commons.DoubleEditor;
 import com.qiushengming.commons.IntEditor;
+import com.qiushengming.commons.ListEditor;
 import com.qiushengming.utils.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +20,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Created by qiushengming on 2018/5/22.
+ * @author qiushengming
+ * @date 2018/5/22.
  */
 public class BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -33,8 +36,8 @@ public class BaseController {
      * @return javax.servlet.http.HttpServletRequest
      */
     private HttpServletRequest getRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder
-                .getRequestAttributes()).getRequest();
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+            .getRequest();
     }
 
     /**
@@ -71,6 +74,7 @@ public class BaseController {
 
     /**
      * 获取请求参数
+     *
      * @return key/value的map集合。
      */
     protected Map<String, Object> getRequestParameters() {
@@ -78,7 +82,7 @@ public class BaseController {
     }
 
     private Map<String, Object> getRequestParameters(
-            HttpServletRequest request) {
+        HttpServletRequest request) {
         Iterator<String> keys = request.getParameterMap().keySet().iterator();
         Map<String, Object> result = new HashMap<>();
         while (keys.hasNext()) {
@@ -90,6 +94,7 @@ public class BaseController {
 
     /**
      * 通过参数名称获取请求参数
+     *
      * @param name 参数名称，即是key
      * @return 参数值，即是value
      */
@@ -113,8 +118,9 @@ public class BaseController {
      * @throws IOException IO异常
      */
     protected String getInputStr() throws IOException {
-        BufferedReader br = new BufferedReader(
-                new InputStreamReader(getRequest().getInputStream(), "UTF-8"));
+        BufferedReader br =
+            new BufferedReader(new InputStreamReader(getRequest().getInputStream(),
+                "UTF-8"));
         String line;
         StringBuilder sb = new StringBuilder();
         while ((line = br.readLine()) != null) {
@@ -129,7 +135,7 @@ public class BaseController {
      * spring mvc 重定向
      *
      * @param path 路径
-     * @return  "redirect:" + path
+     * @return "redirect:" + path
      */
     protected String redirect(String path) {
         logger.debug("重定向地址：redirect:/forward" + path);
@@ -151,6 +157,7 @@ public class BaseController {
 
     /**
      * 获取请求的IP地址
+     *
      * @return IP地址
      */
     protected String getIpAddr() {
@@ -162,14 +169,16 @@ public class BaseController {
         IntEditor intEditor = new IntEditor();
         DoubleEditor doubleEditor = new DoubleEditor();
         BooleanEditor booleanEditor = new BooleanEditor();
-        binder
-                .registerCustomEditor(String.class, new StringTrimmerEditor(false));
+        ListEditor listEditor = new ListEditor();
+        binder.registerCustomEditor(String.class,
+            new StringTrimmerEditor(false));
         binder.registerCustomEditor(int.class, intEditor);
         binder.registerCustomEditor(Integer.class, intEditor);
         binder.registerCustomEditor(Double.class, doubleEditor);
         binder.registerCustomEditor(double.class, doubleEditor);
         binder.registerCustomEditor(boolean.class, booleanEditor);
         binder.registerCustomEditor(Boolean.class, booleanEditor);
+        binder.registerCustomEditor(List.class, listEditor);
     }
 
     /*public User getCurrUser() {

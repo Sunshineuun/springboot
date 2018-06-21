@@ -18,8 +18,9 @@ public class EnumEditor
     @Override
     @SuppressWarnings("rawtypes")
     public void setAsText(String text) throws IllegalArgumentException {
-        if (StringUtils.isEmpty(text))
+        if (StringUtils.isEmpty(text)) {
             return;
+        }
 
         int value = Integer.parseInt(text);
         if (clazz.isEnum()) {
@@ -36,8 +37,9 @@ public class EnumEditor
     @Override
     @SuppressWarnings("rawtypes")
     public String getAsText() {
-        if (getValue() == null)
+        if (getValue() == null) {
             return null;
+        }
 
         if (clazz.isEnum()) {
             Enum[] enums = (Enum[]) clazz.getEnumConstants();

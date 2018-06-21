@@ -5,22 +5,24 @@ import org.apache.commons.lang3.StringUtils;
 import java.beans.PropertyEditorSupport;
 
 /**
- * @author gang.liu
- * @date 2013-4-26
+ * @author qiushengming
+ * @date 2018/6/1
  */
 public final class DoubleEditor extends PropertyEditorSupport {
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
-        if (StringUtils.isEmpty(text))
+        if (StringUtils.isEmpty(text)) {
             text = "0.0";
+        }
 
         setValue(Double.parseDouble(text));
     }
 
     @Override
     public String getAsText() {
-        if (getValue() == null)
+        if (getValue() == null) {
             return null;
+        }
 
         return getValue().toString();
     }

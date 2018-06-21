@@ -5,6 +5,10 @@ import com.qiushengming.mybatis.support.Criteria;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author qiushengming
+ * @date 2018/6/21
+ */
 public interface ObjectSession
     extends DynamicSqlDao {
     <T> T getById(Serializable id, Class<T> clazz);
@@ -21,7 +25,7 @@ public interface ObjectSession
 
     <T> int deleteById(Serializable id, Class<T> clazz);
 
-    <T> void deleteByCriteria(Criteria criteria, Class<?> clazz);
+    int deleteByCriteria(Criteria criteria, Class<?> clazz);
 
     <T> int update(T obj);
 }

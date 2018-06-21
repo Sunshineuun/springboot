@@ -32,6 +32,7 @@ public class Page<T> extends BaseEntity {
     protected String order = null;
     protected boolean autoCount = true;
     protected String sort;
+    protected List<Map<String, Object>> filter;
 
     /**
      * 返回结果
@@ -310,5 +311,13 @@ public class Page<T> extends BaseEntity {
             this.setOrder(list.get(0).get("direction"));
             this.setOrderBy(list.get(0).get("property"));
         }
+    }
+
+    public List<Map<String, Object>> getFilter() {
+        return filter;
+    }
+
+    public void setFilter(List<Map<String, Object>> filter) {
+        this.filter =filter;
     }
 }
