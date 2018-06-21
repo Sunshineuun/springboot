@@ -18,7 +18,9 @@ Ext.define('Ext.ux.GridView', {
   dictLoad: true,
   dictUrl: '/loadDictionary',
   dictionaryParams: '',
+  dictionary: {},
   hasRightMenu: true,
+  hasGridFilters: true,
   navGrid: {
     addText: '新增',
     delText: '删除',
@@ -33,6 +35,7 @@ Ext.define('Ext.ux.GridView', {
   features: [],
   forceFit: true,
   split: true,
+  bbar: null,
   initComponent: function () {
     var me = this;
 
@@ -48,6 +51,8 @@ Ext.define('Ext.ux.GridView', {
 
     // 加载模块配置
     me.loadModuleConfig();
+    // 加载字典
+    me.loadDictionary();
     me.initPanel();
     // 初始化列配置
     me.initColumns();
@@ -57,10 +62,38 @@ Ext.define('Ext.ux.GridView', {
     me.initFeatures();
     // 初始化菜单
     me.initRightMenu();
-    // 加载字典
-    me.loadDictionary();
     // 创建store
     me.createStore();
+    // 创建bbar
+    me.createBBar();
+  },
+  loadModuleConfig: function () {
+    var me = this;
+    var configure = null;
+
+    if (!me.moduleName) {
+      console.error('模块名称不为空');
+      debugger;
+    }
+
+    /**
+     * 加载模块配置
+     */
+    Ext.Ajax.request({
+      async: false,
+      url: '/gridview/getModuleNameByConfigure/' + me.moduleName,
+      success: function (response, opts) {
+        configure = Ext.decode(response.responseText);
+      },
+      failure: function (response, opts) {
+        console.error('配置信息加载失败');
+        debugger;
+      }
+    });
+
+    console.log(configure);
+    me.configure = configure;
+    me.dictionaryParams = configure.dictionaryParams;
   },
   loadDictionary: function () {
     var me = this;
@@ -98,6 +131,7 @@ Ext.define('Ext.ux.GridView', {
               dictionary[key] = eval(obj[key]);
             }
           }
+          me.dictionary = dictionary;
         },
         failure: function (response, opts) {
           error('数据字典加载失败！');
@@ -108,33 +142,6 @@ Ext.define('Ext.ux.GridView', {
     var afterLoadDictionary = me.navGrid.loaddictionaryoption.afterLoadDictionary;
     if (afterLoadDictionary && typeof(afterLoadDictionary) === "function")
       afterLoadDictionary(dictionary);
-  },
-  loadModuleConfig: function () {
-    var me = this;
-    var configure = null;
-
-    if (!me.moduleName) {
-      console.error('模块名称不为空');
-      debugger;
-    }
-
-    /**
-     * 加载模块配置
-     */
-    Ext.Ajax.request({
-      async: false,
-      url: '/gridview/getModuleNameByConfigure/' + me.moduleName,
-      success: function (response, opts) {
-        configure = Ext.decode(response.responseText);
-      },
-      failure: function (response, opts) {
-        console.error('配置信息加载失败');
-        debugger;
-      }
-    });
-
-    console.log(configure);
-    me.configure = configure;
   },
   initPanel: function () {
     var me = this;
@@ -149,11 +156,6 @@ Ext.define('Ext.ux.GridView', {
     });
   },
   initColumns: function () {
-    /**
-     * 创建columns
-     * @type {GridView}
-     */
-
     var me = this;
     var configure = me.configure;
 
@@ -183,6 +185,16 @@ Ext.define('Ext.ux.GridView', {
 
       value.renderer = new Function("value", value.rendererFun);
       value['id'] = 'column-' + value['id'];
+      /*value['filter'] = {
+       type: 'string',
+       // value: 'star',
+       itemDefaults: {
+       // any Ext.form.field.Text configs accepted
+       }
+       };*/
+      if (value.filter && value.filter.type === 'list') {
+        value.filter['options'] = me.dictionary[value.dictionary];
+      }
       me.columns.push(value);
     });
   },
@@ -214,7 +226,6 @@ Ext.define('Ext.ux.GridView', {
       Ext.apply(defaultConfig, value.configMap);
       me.plugins.push(defaultConfig);
     });
-
   },
   initFeatures: function () {
     var me = this;
@@ -233,8 +244,9 @@ Ext.define('Ext.ux.GridView', {
 
       Ext.apply(defaultConfig, value);
       Ext.apply(defaultConfig, value.configMap);
-      me.features.push(defaultConfig);
+      // me.features.push(defaultConfig);
     });
+
   },
   initRightMenu: function () {
     var me = this;
@@ -272,6 +284,7 @@ Ext.define('Ext.ux.GridView', {
       fields: fields,
       pageSize: me.pageSize,
       remoteSort: true, // 设置为 true 则将所有的排序操作推迟到服务器. 如果设置为 false, 则在客户端本地排序
+      remoteFilter: true,
       proxy: {
         type: 'ajax',
         url: me.url + '/list',
@@ -284,13 +297,13 @@ Ext.define('Ext.ux.GridView', {
         },
         reader: {
           type: 'json',
-          rootProperty: 'data'
+          rootProperty: 'data.result',
+          totalProperty: "data.totalCount",
+          successProperty: 'success'
         }
       },
       autoLoad: false,
       sorters: me.configure.sorters,
-      remoteGroup: false,
-      groupField: 'isEnable',
       listeners: {
         load: function (store, records, successful, eOpts) {
           if (successful === false) {
@@ -308,6 +321,14 @@ Ext.define('Ext.ux.GridView', {
     if (me.startLoad) {
       me.store.load();
     }
+  },
+  createBBar: function () {
+    var me = this;
+    me.bbar = Ext.create('Ext.PagingToolbar', {
+      store: me.store,
+      displayInfo: true,
+      emptyMsg: "没有数据"
+    });
   },
   createViewport: function () {
     /**
@@ -329,7 +350,6 @@ Ext.define('Ext.ux.GridView', {
     var grid = Ext.getCmp(moduleName);
     var url = me.url + '/edit';
     var method = 'PUT';
-    console.debug(formData);
 
     if (formData['id'] === 'add') {
       url = me.url + '/add';
@@ -361,7 +381,6 @@ Ext.define('Ext.ux.GridView', {
   addHandler: function (item, e) {
     var grid = Ext.getCmp(moduleName);
     var store = grid.getStore();
-    console.debug(store.getModifiedRecords());
     // store.add({});
     store.insert(0, {id: 'add'});
     grid.getPlugin('rowediting').startEdit(0, 0);
