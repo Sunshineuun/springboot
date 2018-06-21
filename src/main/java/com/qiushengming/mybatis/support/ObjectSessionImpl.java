@@ -46,6 +46,9 @@ public class ObjectSessionImpl
 
         Map<String, Object> values = getValueById(id, classMap);
         values.put(SQL, getSelectSqlById(classMap));
+
+        logger.debug("getById：{}", values);
+
         return this.getSqlSession()
             .selectOne(StatementKeyGenerator.generateSelectStatementKey(clazz),
                 values);
@@ -76,7 +79,7 @@ public class ObjectSessionImpl
     private Map<String, Object> getValueById(Serializable id,
         ClassMap classMap) {
         if (classMap.getIdProperties().size() == 1) {
-            Map<String, Object> values = new HashMap<String, Object>(1);
+            Map<String, Object> values = new HashMap<>(1);
             values.put(classMap.getIdProperties().get(0).getName(), id);
             return values;
         } else {
@@ -95,6 +98,9 @@ public class ObjectSessionImpl
             StatementKeyGenerator.generateSelectStatementKey(clazz);
         Map<Object, Object> params =
             MapUtils.newMap(SQL, classMap.getSelectSql());
+
+        logger.debug("getAll：{}", params);
+
         return this.getSqlSession().selectList(statement, params);
     }
 
@@ -110,6 +116,9 @@ public class ObjectSessionImpl
 
         Map<String, Object> values = getValueByCriteria(criteria, classMap);
         values.put(SQL, getSelectSqlByCriteria(criteria, classMap));
+
+        logger.debug("queryByCriteria:{}", values);
+
         return this.getSqlSession()
             .selectList(StatementKeyGenerator.generateSelectStatementKey(clazz),
                 values);
@@ -120,12 +129,12 @@ public class ObjectSessionImpl
         if (criteria == null) { return 0; }
 
         ClassMap classMap = AnnotationConfiguration.getClassMap(clazz);
+
         return this.executeSelectCountDynamic(getCountSqlByCriteria(criteria,
             classMap), getValueByCriteria(criteria, classMap));
     }
 
-    private <T> String getCountSqlByCriteria(Criteria criteria,
-        ClassMap classMap) {
+    private String getCountSqlByCriteria(Criteria criteria, ClassMap classMap) {
         StringBuilder countSql = new StringBuilder();
         countSql.append("select count(1) from (")
             .append(classMap.getSelectSql())
@@ -135,10 +144,11 @@ public class ObjectSessionImpl
         if (criteria.getConditions().isEmpty()) { return countSql.toString(); }
 
         resovleCriteria(countSql, criteria, classMap);
+
         return countSql.toString();
     }
 
-    private <T> String getSelectSqlByCriteria(Criteria criteria,
+    private String getSelectSqlByCriteria(Criteria criteria,
         ClassMap classMap) {
         if (criteria.getConditions().isEmpty()) {
             return classMap.getSelectSql();
@@ -147,6 +157,7 @@ public class ObjectSessionImpl
         StringBuilder selectSql = new StringBuilder(classMap.getSelectSql());
         selectSql.append(" where 1=1 ");
         resovleCriteria(selectSql, criteria, classMap);
+
         return selectSql.toString();
     }
 
@@ -211,7 +222,7 @@ public class ObjectSessionImpl
         }
     }
 
-    private <T> Map<String, Object> getValueByCriteria(Criteria criteria,
+    private Map<String, Object> getValueByCriteria(Criteria criteria,
         ClassMap classMap) {
         if (criteria.getConditions().isEmpty()) {
             return new HashMap<>(0);
@@ -232,25 +243,21 @@ public class ObjectSessionImpl
     }
 
     @Override
-    public <T> int insert(T obj) {
-        if (obj == null) { return 0; }
-
-        return this.doInsert(obj);
-    }
-
-    @Override
     public <T> int deleteById(Serializable id, Class<T> clazz) {
         if (id == null) { return 0; }
+
+        logger.debug("删除对象为：" + clazz.getName() + "；删除ID为：" + id);
 
         return this.doDeleteById(id, clazz);
     }
 
     @Override
-    public <T> void deleteByCriteria(Criteria criteria, Class<?> clazz) {
-        if (criteria == null) { return; }
+    public int deleteByCriteria(Criteria criteria, Class<?> clazz) {
+        if (criteria == null) { return 0; }
 
         ClassMap classMap = AnnotationConfiguration.getClassMap(clazz);
-        this.executeDeleteDynamic(getDeleteSqlByCriteria(criteria, classMap),
+
+        return this.executeDeleteDynamic(getDeleteSqlByCriteria(criteria, classMap),
             this.getValueByCriteria(criteria, classMap));
     }
 
@@ -287,8 +294,19 @@ public class ObjectSessionImpl
     }
 
     @Override
+    public <T> int insert(T obj) {
+        if (obj == null) { return 0; }
+
+        logger.debug("插入对象为：" + obj.toString());
+
+        return this.doInsert(obj);
+    }
+
+    @Override
     public <T> int update(T obj) {
         if (obj == null) { return 0; }
+
+        logger.debug("更新对象为：" + obj.toString());
 
         return this.doUpdate(obj);
     }
@@ -343,6 +361,9 @@ public class ObjectSessionImpl
             params = getValueMap(params);
             ((Map) params).put(SQL, sql);
         }
+
+        logger.debug("queryBySql >> " + params.toString());
+
         return this.getSqlSession()
             .selectList(StatementKeyGenerator.generateSelectStatementKey(clazz),
                 params);
