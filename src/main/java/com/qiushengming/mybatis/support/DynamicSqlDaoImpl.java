@@ -2,6 +2,7 @@ package com.qiushengming.mybatis.support;
 
 import com.qiushengming.exception.MybatisException;
 import com.qiushengming.mybatis.DynamicSqlDao;
+import com.qiushengming.mybatis.builder.StatementKeyGenerator;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -52,9 +53,18 @@ public class DynamicSqlDaoImpl
 
     @Override
     public int executeSelectCountDynamic(String sql) {
-        return executeSelectCountDynamic(sql, new HashMap<String, Object>());
+        return executeSelectCountDynamic(sql, new HashMap<String, Object>(0));
     }
 
+    /**
+     * 查询返回map集合
+     *
+     * @param sql    脚本
+     * @param params 参数
+     * @param <K>    key
+     * @param <V>    value
+     * @return 返回map集合
+     */
     @Override
     @SuppressWarnings("unchecked")
     public <K, V> List<Map<K, V>> executeSelectListDynamic(String sql,
@@ -72,9 +82,37 @@ public class DynamicSqlDaoImpl
         }
     }
 
+    /**
+     * 查询返回clazz对应的实体
+     *
+     * @param clazz  Class
+     * @param sql    sql
+     * @param params 参数
+     * @param <T>    实体
+     * @return clazz实体的集合
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> List<T> executeSelectListDynamic(Class<?> clazz, String sql,
+        Object params) {
+        try {
+            if (params instanceof Map) {
+                ((Map<String, Object>) params).put(SQL, sql);
+                return sqlSession.selectList(StatementKeyGenerator.generateSelectStatementKey(
+                    clazz), params);
+            } else {
+                return executeSelectListDynamic(clazz,
+                    sql,
+                    PropertyUtils.describe(params));
+            }
+        } catch (Exception e) {
+            throw new MybatisException(e.getMessage(), e);
+        }
+    }
+
     @Override
     public <K, V> List<Map<K, V>> executeSelectListDynamic(String sql) {
-        return executeSelectListDynamic(sql, new HashMap<String, Object>());
+        return executeSelectListDynamic(sql, new HashMap<String, Object>(0));
     }
 
     @Override
@@ -95,7 +133,7 @@ public class DynamicSqlDaoImpl
 
     @Override
     public <K, V> Map<K, V> executeSelectOneDynamic(String sql) {
-        return executeSelectOneDynamic(sql, new HashMap<String, Object>());
+        return executeSelectOneDynamic(sql, new HashMap<String, Object>(0));
     }
 
     @Override
@@ -116,7 +154,7 @@ public class DynamicSqlDaoImpl
 
     @Override
     public int executeUpdateDynamic(String sql) {
-        return executeUpdateDynamic(sql, new HashMap<String, Object>());
+        return executeUpdateDynamic(sql, new HashMap<String, Object>(0));
     }
 
     @Override
@@ -137,7 +175,7 @@ public class DynamicSqlDaoImpl
 
     @Override
     public int executeInsertDynamic(String sql) {
-        return executeInsertDynamic(sql, new HashMap<String, Object>());
+        return executeInsertDynamic(sql, new HashMap<String, Object>(0));
     }
 
     @Override
@@ -158,7 +196,7 @@ public class DynamicSqlDaoImpl
 
     @Override
     public int executeDeleteDynamic(String sql) {
-        return executeDeleteDynamic(sql, new HashMap<String, Object>());
+        return executeDeleteDynamic(sql, new HashMap<String, Object>(0));
     }
 
     @Override
@@ -173,6 +211,25 @@ public class DynamicSqlDaoImpl
                     new RowBounds(offset, limit));
             } else {
                 return executeSelectListDynamic(sql,
+                    PropertyUtils.describe(params));
+            }
+        } catch (Exception e) {
+            throw new MybatisException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> List<T> executeSelectListDynamic(Class<?> clazz, String sql,
+        int offset, int limit, Object params) {
+        try {
+            if (params instanceof Map) {
+                ((Map<String, Object>) params).put(SQL, sql);
+                return sqlSession.selectList(StatementKeyGenerator.generateSelectStatementKey(
+                    clazz), params, new RowBounds(offset, limit));
+            } else {
+                return executeSelectListDynamic(clazz,
+                    sql,
                     PropertyUtils.describe(params));
             }
         } catch (Exception e) {
