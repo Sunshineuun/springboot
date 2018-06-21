@@ -22,7 +22,7 @@ public class DictionaryServiceImpl
 
     @Override
     public Map<String, String> getDictionaryByTypeCode(String typeCode) {
-        return warp(getDao().query("getDictionaryByTypeCode", typeCode));
+        return warp(getDao().<Map>query("getDictionaryByTypeCode", typeCode));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class DictionaryServiceImpl
 
     @Override
     public Map<String, String> getDictionaryOnQueryId(String queryId) {
-        return warp(getDao().query(queryId));
+        return warp(getDao().<Map>query(queryId));
     }
 
     private Map<String, String> warp(List<Map> selectList) {
