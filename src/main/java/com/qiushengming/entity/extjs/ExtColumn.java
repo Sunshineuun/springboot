@@ -1,11 +1,14 @@
 package com.qiushengming.entity.extjs;
 
 import com.qiushengming.annotation.Column;
+import com.qiushengming.annotation.Exclude;
 import com.qiushengming.annotation.Table;
 import com.qiushengming.entity.BaseEntity;
+import com.qiushengming.exception.SystemException;
 import com.qiushengming.utils.Json;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -98,6 +101,22 @@ public class ExtColumn extends BaseEntity {
      * 列顺序标识
      */
     private int orderIndex = 0;
+
+    private Map<String, Object> filter = new HashMap<>();
+
+    private String filterType = "string";
+
+    private String filterValue = "";
+
+    /**
+     * 多个属性用`,`分隔，属性与值之间用`#`分隔
+     */
+    private String filterItemDefaults;
+
+    /**
+     * 字典
+     */
+    private String dictionary;
 
     @Column(value = "MODULE_ID")
     public String getModuleId() {
@@ -229,5 +248,60 @@ public class ExtColumn extends BaseEntity {
 
     public void setOrderIndex(int orderIndex) {
         this.orderIndex = orderIndex;
+    }
+
+    @Exclude
+    public Map<String, Object> getFilter() {
+        return filter;
+    }
+
+    public void setFilter(Map<String, Object> filter) {
+        this.filter = filter;
+    }
+
+    @Column("FILTER_TYPE")
+    public String getFilterType() {
+        return filterType;
+    }
+
+    public void setFilterType(String filterType) {
+        this.filterType = filterType;
+        if(StringUtils.isNotEmpty(filterType)){
+            filter.put("type", filterType);
+        }else{
+            throw new SystemException("缺失过滤器类型");
+        }
+    }
+
+    @Column("FILTER_VALUE")
+    public String getFilterValue() {
+        return filterValue;
+    }
+
+    public void setFilterValue(String filterValue) {
+        this.filterValue = filterValue;
+        if (StringUtils.isNotEmpty(filterValue)) {
+            filter.put("value", filterValue);
+        }
+    }
+
+    @Column("FILTER_ITEM_DEFAULTS")
+    public String getFilterItemDefaults() {
+        return filterItemDefaults;
+    }
+
+    public void setFilterItemDefaults(String filterItemDefaults) {
+        this.filterItemDefaults = filterItemDefaults;
+        if (StringUtils.isNotEmpty(filterItemDefaults)) {
+            filter.put("itemDefaults", filterItemDefaults);
+        }
+    }
+
+    public String getDictionary() {
+        return dictionary;
+    }
+
+    public void setDictionary(String dictionary) {
+        this.dictionary = dictionary;
     }
 }
