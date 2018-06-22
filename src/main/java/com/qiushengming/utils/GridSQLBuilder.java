@@ -144,9 +144,7 @@ public class GridSQLBuilder {
     }
 
     @SuppressWarnings({
-        "SuspiciousMethodCalls",
-        "unchecked",
-        "UnusedReturnValue"})
+        "SuspiciousMethodCalls", "unchecked", "UnusedReturnValue"})
     public static Map buildSqlFragmentAndParams(Map params, Page page,
         Class clazz) {
         List<Map<String, Object>> filters =
@@ -167,16 +165,15 @@ public class GridSQLBuilder {
                 case "java.util.ArrayList":
                 case "java.util.List":
                     sb.append(appendList(params, map, clazz, field));
-                    i += 1;
                     break;
                 case "java.lang.String":
                     sb.append(appendString(params, map, clazz, field));
-                    i += 1;
                     break;
                 default:
-                    logger.warn("注意：在条件查询时，sql片段条件组装未命中。"
-                        + "" + map.get("value").getClass().getName()
-                        + "条件详情：" + map.toString());
+                    logger.warn(
+                        "注意：在条件查询时，sql片段条件组装未命中。" + "" + map.get("value")
+                            .getClass()
+                            .getName() + "条件详情：" + map.toString());
                     break;
             }
 
@@ -184,6 +181,8 @@ public class GridSQLBuilder {
             if (i + 1 < filters.size()) {
                 sb.append(" OR ");
             }
+
+            i += 1;
         }
 
         params.put(SQLFRAGMENT, sb.toString());
