@@ -95,7 +95,7 @@ public abstract class AbstractQueryService<T extends BaseEntity>
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Page<?> findOnPage(String countSql, String searchSql,
         Map<String, Object> params, Page page) {
-        GridSQLBuilder.buildSqlFragmentAndParams(page);
+        GridSQLBuilder.buildSqlFragmentAndParams(params, page, entityClass);
 
         int totalCount;
         if (!StringUtils.isEmpty(countSql)) {
@@ -107,6 +107,7 @@ public abstract class AbstractQueryService<T extends BaseEntity>
 
             // 如果查询的条数为0,则无需再查询数据，直接返回
             if (totalCount == 0) {
+                logger.debug("查询结果数量为空，不在进行下一步查询！");
                 return page;
             }
         }
