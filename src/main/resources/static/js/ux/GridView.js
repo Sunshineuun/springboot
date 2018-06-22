@@ -3,6 +3,7 @@
  *  2. 单元格中的值溢出，展示悬浮。
  *  3. 分组插件不能用
  *  4. 过滤器，设置为回车再查询。
+ *  5. 过滤器，查询结果高亮
  *
  */
 Ext.define('Ext.ux.GridView', {
@@ -200,7 +201,11 @@ Ext.define('Ext.ux.GridView', {
 
       if (value.filterType === 'string') {
         value.filter['emptyText'] = '请输入...';
+
+        // 当在输入框中键入内容，过滤器查询延迟时间。让它不立刻进行查询。
+        value.filter['updateBuffer '] = 2000;
       }
+
       me.columns.push(value);
     });
   },
