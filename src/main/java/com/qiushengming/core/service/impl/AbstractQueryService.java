@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import static com.qiushengming.utils.ReflectionUtils.wrapProperty;
+
 /**
  * @author qiushengming
  * @date 2018/4/14
@@ -119,13 +121,13 @@ public abstract class AbstractQueryService<T extends BaseEntity>
         if (StringUtils.isNotEmpty(page.getOrderBy())) {
             if (StringUtils.isNotEmpty(page.getOrder())) {
                 searchSqlBuilder.append(" order by ")
-                    .append(page.getOrderBy())
+                    .append(wrapProperty(page.getOrderBy(), entityClass))
                     .append(" ")
                     .append(page.getOrder())
                     .append(",1,2");
             } else {
                 searchSqlBuilder.append(" order by ")
-                    .append(page.getOrderBy())
+                    .append(wrapProperty(page.getOrderBy(), entityClass))
                     .append(" asc ")
                     .append(",1,2");
             }
