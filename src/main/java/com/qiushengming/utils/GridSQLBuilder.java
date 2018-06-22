@@ -1,15 +1,23 @@
 package com.qiushengming.utils;
 
 
+import com.qiushengming.annotation.Column;
 import com.qiushengming.entity.code.Page;
+import com.qiushengming.exception.SystemException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * 配合前端Extjs过滤进行数据查询，组装SQL片段
+ * 目前支持的： <br>
+ *
  * @author qiushengming
  * @date 2018/6/15.
  */
@@ -50,6 +58,10 @@ public class GridSQLBuilder {
     private static final String NC = "nc";
     private static final String BN = "nc";
     private static final String EN = "nc";
+    private static final String LIKE = "like";
+
+    private static final Logger logger =
+        LoggerFactory.getLogger(GridSQLBuilder.class);
 
     static {
         OPERATORS.put("eq", "=");
@@ -67,6 +79,7 @@ public class GridSQLBuilder {
         OPERATORS.put("ew", "");
         OPERATORS.put("en", "like");
         OPERATORS.put("cn", "like");
+        OPERATORS.put("like", "like");
         OPERATORS.put("nc", "not like");
     }
 
@@ -130,16 +143,153 @@ public class GridSQLBuilder {
         return map;
     }
 
-    public static String buildSqlFragmentAndParams(Page page) {
+    @SuppressWarnings({
+        "SuspiciousMethodCalls",
+        "unchecked",
+        "UnusedReturnValue"})
+    public static Map buildSqlFragmentAndParams(Map params, Page page,
+        Class clazz) {
         List<Map<String, Object>> filters =
             (List<Map<String, Object>>) page.getFilter();
+
         if (CollectionUtils.isEmpty(filters)) {
-            return "";
+            return params;
         }
+
+        StringBuilder sb = new StringBuilder();
+
+        int i = 0;
         for (Map<String, Object> map : filters) {
-            System.out.println(map);
+
+            String field = "f" + String.valueOf(i);
+
+            switch (map.get("value").getClass().getName()) {
+                case "java.util.ArrayList":
+                case "java.util.List":
+                    sb.append(appendList(params, map, clazz, field));
+                    i += 1;
+                    break;
+                case "java.lang.String":
+                    sb.append(appendString(params, map, clazz, field));
+                    i += 1;
+                    break;
+                default:
+                    logger.warn("注意：在条件查询时，sql片段条件组装未命中。"
+                        + "" + map.get("value").getClass().getName()
+                        + "条件详情：" + map.toString());
+                    break;
+            }
+
+            // 多条件下用或来查询，后续需要增加参数进行 [OR\AND]的切换，现在默认设置为OR
+            if (i + 1 < filters.size()) {
+                sb.append(" OR ");
+            }
         }
-        return "";
+
+        params.put(SQLFRAGMENT, sb.toString());
+
+        return params;
+    }
+
+    /**
+     * 拼接那些值为List类型的属性
+     *
+     * @param params 参数，用于将sql查询的数据存储在里面map.get("value")
+     * @param map    当前查询条件的相关属性`{operator=in, value=[1], property=occupy}`
+     * @param clazz  当前对象
+     * @param field  `#`占位符
+     * @return sql组装的片段
+     */
+    @SuppressWarnings("unchecked")
+    private static String appendList(Map params, Map map, Class clazz,
+        String field) {
+
+        StringBuilder sb = new StringBuilder();
+
+        String property = (String) map.get("property");
+        String operator = (String) map.get("operator");
+        List value = (List) map.get("value");
+
+        // 查询列
+        sb.append(wrapProperty(property, clazz)).append(" ")
+            // 运算符
+            .append(OPERATORS.get(operator)).append(" ( ");
+
+        int i = 0;
+        for (Object o : value) {
+            // 值
+            sb.append(" #{ ")
+                .append(field)
+                .append(i)
+                .append(" , jdbcType=VARCHAR} ");
+            if (i + 1 < value.size()) {
+                sb.append(",");
+            }
+            params.put(field + String.valueOf(i), o);
+            i += 1;
+        }
+        sb.append(" ) ");
+
+        // 参数存储
+
+        return sb.toString();
+    }
+
+    /**
+     * 拼接那些值为String类型的属性
+     *
+     * @param params 参数，用于将sql查询的数据存储在里面map.get("value")
+     * @param map    当前查询条件的相关属性`{"operator":"like","value":"12","property":"name"}`
+     * @param clazz  当前对象
+     * @param field  `#`占位符
+     * @return sql组装的片段
+     */
+    @SuppressWarnings("unchecked")
+    private static String appendString(Map params, Map map, Class clazz,
+        String field) {
+
+        StringBuilder sb = new StringBuilder();
+        String property = (String) map.get("property");
+        String operator = (String) map.get("operator");
+        String value = (String) map.get("value");
+
+        // 查询列
+        sb.append(wrapProperty(property, clazz)).append(" ")
+            // 运算符
+            .append(OPERATORS.get(operator))
+            // 值
+            .append(" #{ ").append(field).append(" , jdbcType=VARCHAR} ");
+
+        // 参数存储
+        params.put(field, wrapParam(operator, value));
+
+        return sb.toString();
+    }
+
+    /**
+     * 请传入字符串，否则会出错
+     *
+     * @param property 属性名称
+     * @return 映射数据库的值
+     */
+    @SuppressWarnings("unchecked")
+    private static String wrapProperty(Object property, Class clazz) {
+        if (!property.getClass().equals(String.class)) {
+            throw new SystemException("属性名称错误：" + property.toString());
+        }
+        String s = "get" + CustomStringUtils.captureName1((String) property);
+
+        try {
+            Method m = clazz.getMethod(s);
+            Column c = m.getAnnotation(Column.class);
+            if (c == null) {
+                return ((String) property).toUpperCase();
+            } else {
+                return c.value().toUpperCase();
+            }
+        } catch (NoSuchMethodException e) {
+            throw new SystemException(e);
+        }
     }
 
     /**
@@ -150,7 +300,8 @@ public class GridSQLBuilder {
      * @return 包装后的值
      */
     protected static Object wrapParam(String op, Object value) {
-        if (StringUtils.equals(CN, op) || NC.equals(op)) {
+        if (StringUtils.equals(CN, op) || StringUtils.equals(NC, op)
+            || StringUtils.equals(LIKE, op)) {
             value = "%" + value + "%";
         } else if (BN.equals(op)) {
             value = value + "%";
@@ -158,6 +309,21 @@ public class GridSQLBuilder {
             value = "%" + value;
         }
         return value;
+    }
+
+    /**
+     * 在in or not in 的查询中，将List转换为`('1','2','3')`的情况
+     *
+     * @param operator sql运算符 in or not in
+     * @param value    值
+     * @return String 例如：`('1','2','3')`
+     */
+    private static String wrapListParam(String operator, List value) {
+        StringBuilder sb = new StringBuilder();
+        //        sb.append("'");
+        sb.append(StringUtils.join(value, ","));
+        //        sb.append("'");
+        return sb.toString();
     }
 
     // public static void main(String[] args){
