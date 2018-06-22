@@ -1,6 +1,8 @@
 /**
  *  1. 通过后台加载数据，来进行界面配置。
  *  2. 单元格中的值溢出，展示悬浮。
+ *  3. 分组插件不能用
+ *  4. 过滤器，设置为回车再查询。
  *
  */
 Ext.define('Ext.ux.GridView', {
@@ -192,8 +194,12 @@ Ext.define('Ext.ux.GridView', {
        // any Ext.form.field.Text configs accepted
        }
        };*/
-      if (value.filter && value.filter.type === 'list') {
+      if (value.filterType && value.filterType === 'list') {
         value.filter['options'] = me.dictionary[value.dictionary];
+      }
+
+      if (value.filterType === 'string') {
+        value.filter['emptyText'] = '请输入...';
       }
       me.columns.push(value);
     });
@@ -221,6 +227,12 @@ Ext.define('Ext.ux.GridView', {
           }
         };
         Ext.apply(value, listeners);
+      }
+      if (value.ptype === 'gridfilters') {
+        defaultConfig = {
+          menuFilterText: '过滤',
+          showMenu: true
+        };
       }
       Ext.apply(defaultConfig, value);
       Ext.apply(defaultConfig, value.configMap);
@@ -660,3 +672,4 @@ Ext.define('Ext.ux.Combobox', {
   displayField: 'label',
   valueField: 'value'
 });
+
