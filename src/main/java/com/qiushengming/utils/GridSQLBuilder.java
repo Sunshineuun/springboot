@@ -1,18 +1,17 @@
 package com.qiushengming.utils;
 
 
-import com.qiushengming.annotation.Column;
 import com.qiushengming.entity.code.Page;
-import com.qiushengming.exception.SystemException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.qiushengming.utils.ReflectionUtils.wrapProperty;
 
 /**
  * 配合前端Extjs过滤进行数据查询，组装SQL片段
@@ -263,32 +262,6 @@ public class GridSQLBuilder {
         params.put(field, wrapParam(operator, value));
 
         return sb.toString();
-    }
-
-    /**
-     * 请传入字符串，否则会出错
-     *
-     * @param property 属性名称
-     * @return 映射数据库的值
-     */
-    @SuppressWarnings("unchecked")
-    private static String wrapProperty(Object property, Class clazz) {
-        if (!property.getClass().equals(String.class)) {
-            throw new SystemException("属性名称错误：" + property.toString());
-        }
-        String s = "get" + CustomStringUtils.captureName1((String) property);
-
-        try {
-            Method m = clazz.getMethod(s);
-            Column c = m.getAnnotation(Column.class);
-            if (c == null) {
-                return ((String) property).toUpperCase();
-            } else {
-                return c.value().toUpperCase();
-            }
-        } catch (NoSuchMethodException e) {
-            throw new SystemException(e);
-        }
     }
 
     /**

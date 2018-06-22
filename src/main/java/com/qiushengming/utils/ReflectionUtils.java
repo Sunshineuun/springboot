@@ -1,8 +1,11 @@
 package com.qiushengming.utils;
 
+import com.qiushengming.annotation.Column;
+import com.qiushengming.exception.SystemException;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -130,5 +133,31 @@ public class ReflectionUtils
             }
         }
         return null;
+    }
+
+    /**
+     * 请传入字符串，否则会出错
+     *
+     * @param property 属性名称
+     * @return 映射数据库的值
+     */
+    @SuppressWarnings("unchecked")
+    public static String wrapProperty(Object property, Class clazz) {
+        if (!property.getClass().equals(String.class)) {
+            throw new SystemException("属性名称错误：" + property.toString());
+        }
+        String s = "get" + CustomStringUtils.captureName1((String) property);
+
+        try {
+            Method m = clazz.getMethod(s);
+            Column c = m.getAnnotation(Column.class);
+            if (c == null) {
+                return ((String) property).toUpperCase();
+            } else {
+                return c.value().toUpperCase();
+            }
+        } catch (NoSuchMethodException e) {
+            throw new SystemException(e);
+        }
     }
 }
