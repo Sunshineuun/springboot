@@ -1,6 +1,7 @@
 package com.qiushengming.mybatis.support;
 
 import com.qiushengming.configuration.mybatis.MybatisCustomConfiguration;
+import com.qiushengming.enums.SQLDialect;
 import com.qiushengming.exception.MybatisException;
 import com.qiushengming.mybatis.ObjectSession;
 import com.qiushengming.mybatis.annotation.support.AnnotationConfiguration;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,12 +38,18 @@ public class ObjectSessionImpl
 
     @Autowired
     public ObjectSessionImpl(
-        @Qualifier(value = "sqlSessionTemplate") SqlSession sqlSession) {
-        super(sqlSession);
+            @Qualifier(value = "sqlSessionTemplate") SqlSession sqlSession,
+            @Qualifier(value= "oracleSqlSessionTemplate")SqlSession oracleSession) {
+        super(getSqlSessionMap(sqlSession, oracleSession));
     }
 
     @Override
     public <T> T getById(Serializable id, Class<T> clazz) {
+        return getById(id, clazz, SQLDialect.MYSQL);
+    }
+
+    @Override
+    public <T> T getById(Serializable id, Class<T> clazz, SQLDialect dialect) {
         ClassMap classMap = AnnotationConfiguration.getClassMap(clazz);
 
         Map<String, Object> values = getValueById(id, classMap);
@@ -49,9 +57,9 @@ public class ObjectSessionImpl
 
         logger.debug("getById：{}", values);
 
-        return this.getSqlSession()
-            .selectOne(StatementKeyGenerator.generateSelectStatementKey(clazz),
-                values);
+        return this.getSqlSession(dialect)
+                .selectOne(StatementKeyGenerator.generateSelectStatementKey(clazz),
+                        values);
     }
 
     private String getSelectSqlById(ClassMap classMap) {
@@ -93,15 +101,20 @@ public class ObjectSessionImpl
 
     @Override
     public <T> List<T> getAll(Class<T> clazz) {
+        return getAll(clazz, SQLDialect.MYSQL);
+    }
+
+    @Override
+    public <T> List<T> getAll(Class<T> clazz, SQLDialect dialect) {
         ClassMap classMap = AnnotationConfiguration.getClassMap(clazz);
         String statement =
-            StatementKeyGenerator.generateSelectStatementKey(clazz);
+                StatementKeyGenerator.generateSelectStatementKey(clazz);
         Map<Object, Object> params =
-            MapUtils.newMap(SQL, classMap.getSelectSql());
+                MapUtils.newMap(SQL, classMap.getSelectSql());
 
         logger.debug("getAll：{}", params);
 
-        return this.getSqlSession().selectList(statement, params);
+        return this.getSqlSession(dialect).selectList(statement, params);
     }
 
     @Override
@@ -119,7 +132,7 @@ public class ObjectSessionImpl
 
         logger.debug("queryByCriteria:{}", values);
 
-        return this.getSqlSession()
+        return this.getSqlSession(criteria.getDialect())
             .selectList(StatementKeyGenerator.generateSelectStatementKey(clazz),
                 values);
     }
@@ -364,8 +377,15 @@ public class ObjectSessionImpl
 
         logger.debug("queryBySql >> " + params.toString());
 
-        return this.getSqlSession()
+        return this.getSqlSession(params)
             .selectList(StatementKeyGenerator.generateSelectStatementKey(clazz),
                 params);
+    }
+
+    private static Map<String,SqlSession> getSqlSessionMap(SqlSession sqlSession, SqlSession oracleSession) {
+        Map<String, SqlSession> map = new LinkedHashMap<>();
+        map.put(SQLDialect.MYSQL.getValue(), sqlSession);
+        map.put(SQLDialect.ORACLE.getValue(), oracleSession);
+        return map;
     }
 }

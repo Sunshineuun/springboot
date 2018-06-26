@@ -1,5 +1,6 @@
 package com.qiushengming.dao;
 
+import com.qiushengming.enums.SQLDialect;
 import com.qiushengming.mybatis.ObjectSession;
 import com.qiushengming.mybatis.support.Criteria;
 import org.apache.ibatis.session.RowBounds;
@@ -23,8 +24,12 @@ public class MinnieDaoImpl
     @Resource(name = "objectSession")
     private ObjectSession session;
 
-    public SqlSession getSqlSession() {
-        return session.getSqlSession();
+    private SqlSession getSqlSession(Object param) {
+        return session.getSqlSession(param);
+    }
+
+    private SqlSession getSqlSession(SQLDialect dialect) {
+        return session.getSqlSession(dialect);
     }
 
 
@@ -99,18 +104,18 @@ public class MinnieDaoImpl
 
     @Override
     public <T> List<T> query(String mybaitsId) {
-        return getSqlSession().selectList(mybaitsId);
+        return getSqlSession(SQLDialect.MYSQL).selectList(mybaitsId);
     }
 
     @Override
     public <T> List<T> query(String mybaitsId, Object params) {
-        return getSqlSession().selectList(mybaitsId, params);
+        return getSqlSession(params).selectList(mybaitsId, params);
     }
 
     @Override
     public <T> List<T> query(String mybaitsId, Object params, int offset,
         int limit) {
-        return getSqlSession().selectList(mybaitsId,
+        return getSqlSession(params).selectList(mybaitsId,
             params,
             new RowBounds(offset, limit));
     }

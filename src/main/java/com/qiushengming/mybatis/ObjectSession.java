@@ -1,5 +1,6 @@
 package com.qiushengming.mybatis;
 
+import com.qiushengming.enums.SQLDialect;
 import com.qiushengming.mybatis.support.Criteria;
 
 import java.io.Serializable;
@@ -13,7 +14,11 @@ public interface ObjectSession
     extends DynamicSqlDao {
     <T> T getById(Serializable id, Class<T> clazz);
 
+    <T> T getById(Serializable id, Class<T> clazz, SQLDialect dialect);
+
     <T> List<T> getAll(Class<T> clazz);
+
+    <T> List<T> getAll(Class<T> clazz, SQLDialect dialect);
 
     <T> List<T> queryByCriteria(Criteria criteria, Class<T> clazz);
 

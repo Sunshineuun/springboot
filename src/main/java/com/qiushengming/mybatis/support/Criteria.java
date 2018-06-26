@@ -1,6 +1,7 @@
 package com.qiushengming.mybatis.support;
 
 
+import com.qiushengming.enums.SQLDialect;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -12,12 +13,18 @@ import java.util.List;
 public final class Criteria {
     private final List<Condition> conditions = new ArrayList<Condition>(5);
     private final List<Order> orders = new ArrayList<Order>(1);
+    private SQLDialect dialect;
 
-    private Criteria() {
+    private Criteria(SQLDialect dialect) {
+        this.dialect = dialect;
     }
 
     public static Criteria create() {
-        return new Criteria();
+        return new Criteria(SQLDialect.MYSQL);
+    }
+
+    public static Criteria create(SQLDialect dialect) {
+        return new Criteria(dialect);
     }
 
     public Criteria andEqualTo(String name, Object value) {
@@ -251,5 +258,13 @@ public final class Criteria {
         public void setOrder(String order) {
             this.order = order;
         }
+    }
+
+    public SQLDialect getDialect() {
+        return dialect;
+    }
+
+    public void setDialect(SQLDialect dialect) {
+        this.dialect = dialect;
     }
 }

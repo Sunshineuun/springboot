@@ -26,6 +26,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 /**
+ * 多个sqlsession在这里创建
  * mybatis sqlSessionFactory and sqlSessionTemplate创建 <br>
  * {@link org.apache.ibatis.session.Configuration} 参阅 http://www.mybatis.org/mybatis-3/zh/configuration.html<br>
  *
@@ -61,9 +62,7 @@ public class MybatisCustomConfiguration {
         this.configurationCustomizers = configurationCustomizersProvider.getIfAvailable();
     }
 
-    @Bean(name = "sqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactoryBean(
-        @Qualifier("dataSource") DataSource dataSource) throws Exception {
+    private SqlSessionFactory createSqlSessionFactory(DataSource dataSource) throws Exception {
         AnnotationSqlSessionFactoryBean bean = new AnnotationSqlSessionFactoryBean();
 
         // 设置数据源
@@ -100,9 +99,24 @@ public class MybatisCustomConfiguration {
         return bean.getObject();
     }
 
+    @Bean(name = "sqlSessionFactory")
+    public SqlSessionFactory sqlSessionFactoryBean(
+            @Qualifier("dataSource") DataSource dataSource) throws Exception {
+        return createSqlSessionFactory(dataSource);
+    }
+
     @Bean(name = "sqlSessionTemplate")
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
+    @Bean(name = "oracleSessionFactory")
+    public SqlSessionFactory oracleSqlSessionFactory(@Qualifier("oracleDB") DataSource dataSource) throws Exception {
+        return createSqlSessionFactory(dataSource);
+    }
+
+    @Bean(name = "oracleSqlSessionTemplate")
+    public SqlSessionTemplate oracleSqlSessionTemplate(@Qualifier("oracleSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
 }

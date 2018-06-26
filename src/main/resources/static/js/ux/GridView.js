@@ -6,6 +6,15 @@
  *  5. 过滤器，查询结果高亮
  *
  */
+Ext.require([
+  'Ext.grid.*',
+  'Ext.data.*',
+  'Ext.panel.*',
+  'Ext.layout.container.Border'
+]);
+
+Ext.tip.QuickTipManager.init();
+
 Ext.define('Ext.ux.GridView', {
   extend: 'Ext.grid.Panel',
   alias: 'widget.uxgridview',
@@ -251,7 +260,7 @@ Ext.define('Ext.ux.GridView', {
       var defaultConfig = {};
       if (value.ftype === 'groupingsummary') {
         defaultConfig = {
-          ftype: 'groupingsummary',
+          ftype: 'grouping',
           groupHeaderTpl: '{columnName}: {name} ({rows.length})',
           showGroupsText: '取消分组',
           groupByText: '分组',
@@ -261,7 +270,12 @@ Ext.define('Ext.ux.GridView', {
 
       Ext.apply(defaultConfig, value);
       Ext.apply(defaultConfig, value.configMap);
-      // me.features.push(defaultConfig);
+
+      defaultConfig['id'] = 'groupingsummary-' + value.id;
+
+      console.log(defaultConfig);
+
+      me.features.push(defaultConfig);
     });
 
   },
@@ -302,6 +316,8 @@ Ext.define('Ext.ux.GridView', {
       pageSize: me.pageSize,
       remoteSort: true, // 设置为 true 则将所有的排序操作推迟到服务器. 如果设置为 false, 则在客户端本地排序
       remoteFilter: true,
+      remoteGroup: false,
+      groupField: 'isEnable',
       proxy: {
         type: 'ajax',
         url: me.url + '/list',

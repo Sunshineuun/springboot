@@ -1,5 +1,6 @@
 package com.qiushengming.mybatis;
 
+import com.qiushengming.enums.SQLDialect;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
@@ -158,10 +159,18 @@ public interface DynamicSqlDao {
         int limit, Object params);
 
     /**
-     * 获取sqlsession
-     *
-     * @return sqlsession
+     * 获取sqlsession <br>
+     * 多数据源返回哪个session <br>
+     * 默认取MYSQL <br>
+     * @param param 参数，多数据源返回哪个session。key=SQLSESSION
+     * @return sqlSession
      */
-    SqlSession getSqlSession();
+    SqlSession getSqlSession(Object param);
 
+    /**
+     * {@link DynamicSqlDao#getSqlSession(Object)}
+     * @param dialect {@link SQLDialect}
+     * @return sqlSession
+     */
+    SqlSession getSqlSession(SQLDialect dialect);
 }
