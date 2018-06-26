@@ -273,14 +273,14 @@ public class DynamicSqlDaoImpl
 
     @Override
     public SqlSession getSqlSession(Object param) {
-        /*if(String.class.equals(param.getClass())){
+        if(String.class.equals(param.getClass())){
             if(StringUtils.isEmpty((String)param)
-                && StringUtils.equals("MYSQL", (String)param)
-                && StringUtils.equals("ORACLE", (String)param)){
+                || !StringUtils.equals("MYSQL", (String)param)
+                || !StringUtils.equals("ORACLE", (String)param)){
                 return sqlSessionMap.get("MYSQL");
             }
             return sqlSessionMap.get(param);
-        }*/
+        }
 
         if(param instanceof Map){
             String value = (String) ((Map) param).get(SQLSESSION);
