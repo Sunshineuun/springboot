@@ -18,21 +18,18 @@ import java.util.List;
 @RestController
 public class UserController {
 
-    @Resource(name = "userService")
+    @Resource(name = "userDetailsService")
     private UserService service;
 
     @ResponseBody
     @RequestMapping("/addUser")
     public MinNieResponse add(String username, String sex, String age) {
-        User user = new User();
-        user.setName(username);
-        user.setSex(sex);
-        user.setAge(age);
+        /*User user = new User();
         Integer result = service.add(user);
         if (result > 0) {
             return new MinNieResponse(true, "新增成功", result);
-        }
-        return new MinNieResponse(false, "新增失败", result);
+        }*/
+        return new MinNieResponse(false, "新增失败", null);
     }
 
     @ResponseBody
@@ -50,6 +47,7 @@ public class UserController {
     @ResponseBody
     @RequestMapping("/update")
     public User update(User user) {
-        return new User();
+        // return new User();
+        return null;
     }
 }

@@ -136,6 +136,7 @@ Ext.define('Ext.ux.GridView', {
         async: false,
         url: me.dictUrl,
         params: params,
+        method: 'GET',
         success: function (response, opts) {
           var obj = Ext.decode(response.responseText);
           if (obj) {

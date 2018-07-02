@@ -1,22 +1,22 @@
 package com.qiushengming.service.impl;
 
 import com.qiushengming.core.service.impl.AbstractManagementService;
+import com.qiushengming.entity.Authority;
 import com.qiushengming.entity.User;
 import com.qiushengming.mybatis.support.Criteria;
+import com.qiushengming.service.AuthorityService;
 import com.qiushengming.service.PermissionService;
 import com.qiushengming.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +33,9 @@ public class UserServiceImpl
 
     @Resource(name = "permissionService")
     private PermissionService permissionService;
+
+    @Resource(name = "authorityService")
+    private AuthorityService authorityService;
 
     @Override
     public List<User> findAllUser() {
@@ -56,11 +59,9 @@ public class UserServiceImpl
             throw new UsernameNotFoundException(name + "，用户不存在！");
         }
 
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        List<Authority> authorities =
+            authorityService.listAuthorityByUserId(user.getId());
         //对应的权限添加
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-
         user.setAuthorities(authorities);
 
         return user;

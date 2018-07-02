@@ -47,7 +47,6 @@ public class DictionaryController extends BaseController {
         return new MinNieResponse(true, "", list);
     }
 
-    @ResponseBody
     @RequestMapping("/getDictionaryOnQueryId/{queryId}")
     public String getDictionaryOnQueryId(
             @PathVariable String queryId,

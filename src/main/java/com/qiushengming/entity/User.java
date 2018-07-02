@@ -3,7 +3,6 @@ package com.qiushengming.entity;
 import com.qiushengming.annotation.Column;
 import com.qiushengming.annotation.Exclude;
 import com.qiushengming.annotation.Table;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class User
 
     private String nikeName;
 
-    List<SimpleGrantedAuthority> authorities;
+    private List<Authority> authorities;
 
     @Column("USER_NAME")
     public String getUserName() {
@@ -51,11 +50,11 @@ public class User
     }
 
     @Exclude
-    public List<SimpleGrantedAuthority> getAuthorities() {
+    public List<Authority> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(List<SimpleGrantedAuthority> authorities) {
+    public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
     }
 }
