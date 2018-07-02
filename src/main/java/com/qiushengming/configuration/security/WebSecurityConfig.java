@@ -54,8 +54,7 @@ public class WebSecurityConfig
             // 登陆成功跳转的地址
             .defaultSuccessUrl("/forward/index")
             // 登陆成功后的操作，传入方法
-            //.successHandler()
-
+            .successHandler(new CustomAuthenticationSuccessHandler())
             // 构建登出界面，允许任何权限访问
             .and().logout().permitAll().and()
             // 登录后记住用户，下次自动登录,数据库中必须存在名为persistent_logins的表
@@ -103,5 +102,10 @@ public class WebSecurityConfig
     @Bean
     public static BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CustomAuthenticationSuccessHandler createSuccessHandler(){
+        return new CustomAuthenticationSuccessHandler();
     }
 }
