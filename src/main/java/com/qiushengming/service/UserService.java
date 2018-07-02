@@ -10,8 +10,7 @@ import java.util.List;
  * @date 2018/3/31
  */
 public interface UserService
-        extends ManagementService<User> {
-
+    extends ManagementService<User> {
     List<User> findAllUser();
 
     User findUserName(String name);
