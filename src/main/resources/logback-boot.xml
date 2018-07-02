@@ -5,7 +5,10 @@
     <!-- ConsoleAppender：把日志输出到控制台 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d %p (%file:%line\)- %m%n</pattern>
+            <!--%caller{3}-->
+            <pattern>
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] | %boldYellow(%t) | %highlight(%-5level) | %boldGreen(%logger{0}) %line %r %n - %m %msg%n
+            </pattern>
             <!-- 控制台也要使用UTF-8，不要使用GBK，否则会中文乱码 -->
             <charset>UTF-8</charset>
         </encoder>
@@ -39,7 +42,7 @@
         <encoder>
             <!-- pattern节点，用来设置日志的输入格式 -->
             <pattern>
-                %date{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] | %boldYellow(%t) | %highlight(%-5level) | %boldGreen(%logger{0}) %line %r %n - %m %msg%n
             </pattern>
             <!-- 记录日志的编码:此处设置字符集 - -->
             <charset>UTF-8</charset>
@@ -54,7 +57,7 @@
         </filter>
         <encoder>
             <pattern>
-                %date{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n
+                [%date{yyyy-MM-dd HH:mm:ss.SSS}] | %boldYellow(%t) | %highlight(%-5level) | %boldGreen(%logger{0}) %line %r %n - %m %msg%n
             </pattern>
         </encoder>
         <!--<File>log/%d{yyyy-MM-dd}/error.%i.log</File>-->
