@@ -1,40 +1,61 @@
 package com.qiushengming.entity;
 
+import com.qiushengming.annotation.Column;
+import com.qiushengming.annotation.Exclude;
 import com.qiushengming.annotation.Table;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.List;
 
 /**
- * @author MinMin
+ * @author qiushengming
+ * @date 2018/7/1
  */
-@Table(value = "MM_USER", resultMapId = "User")
-public class User extends BaseEntity {
+@Table(value = "SYS_USER", resultMapId = "UserMap")
+public class User
+    extends BaseEntity {
 
-    private String name;
+    private String userName;
 
-    private String sex;
+    private String passWord;
 
-    private String age;
+    private String nikeName;
 
-    public String getName() {
-        return name;
+    List<SimpleGrantedAuthority> authorities;
+
+    @Column("USER_NAME")
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
     }
 
-    public String getSex() {
-        return sex;
+    @Column("PASS_WORD")
+    public String getPassWord() {
+        return passWord;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex == null ? null : sex.trim();
+    public void setPassWord(String passWord) {
+        this.passWord = passWord == null ? null : passWord.trim();
     }
 
-    public String getAge() {
-        return age;
+    @Column("NIKE_NAME")
+    public String getNikeName() {
+        return nikeName;
     }
 
-    public void setAge(String age) {
-        this.age = age;
+    public void setNikeName(String nikeName) {
+        this.nikeName = nikeName == null ? null : nikeName.trim();
+    }
+
+    @Exclude
+    public List<SimpleGrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<SimpleGrantedAuthority> authorities) {
+        this.authorities = authorities;
     }
 }
