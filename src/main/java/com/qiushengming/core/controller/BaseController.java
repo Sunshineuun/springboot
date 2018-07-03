@@ -77,11 +77,11 @@ public class BaseController {
      *
      * @return key/value的map集合。
      */
-    protected Map<String, Object> getRequestParameters() {
+    public Map<String, Object> getRequestParameters() {
         return getRequestParameters(getRequest());
     }
 
-    private Map<String, Object> getRequestParameters(
+    public Map<String, Object> getRequestParameters(
         HttpServletRequest request) {
         Iterator<String> keys = request.getParameterMap().keySet().iterator();
         Map<String, Object> result = new HashMap<>();

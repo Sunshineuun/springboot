@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" >
+<head >
+  <meta charset="UTF-8" >
+  <title >数据导入</title >
+  <link href="/static/js/bootstrap/css/fileinput-rtl.css" type="text/css" >
+  <link href="/static/js/bootstrap/css/fileinput.css" media="all"
+        rel="stylesheet" type="text/css" >
+  <link href="/static/js/bootstrap/css/theme.css" media="all" rel="stylesheet"
+        type="text/css" >
+  <link href="/static/js/bootstrap/css/bootstrap.css" rel="stylesheet" >
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script >
+  <script src="/static/js/bootstrap/js/fileinput.js"
+          type="text/javascript" ></script >
+  <script src="/static/js/bootstrap/js/piexif.js"
+          type="text/javascript" ></script >
+  <script src="/static/js/bootstrap/js/sortable.js"
+          type="text/javascript" ></script >
+  <script src="/static/js/bootstrap/js/zh.js" type="text/javascript" ></script >
+  <script src="/static/js/bootstrap/js/theme.js"
+          type="text/javascript" ></script >
+  <script src="/static/js/bootstrap/js/bootstrap.js"
+          type="text/javascript" ></script >
+</head >
+<body >
+<div class="ontainer kv-main" >
+  <form method="post" th:action="@{/importData/importService/importFile}"
+        enctype="multipart/form-data" >
+    <!--<div class="file-loading" >
+      <input id="kv-explorer" type="file" multiple >
+    </div >-->
+    <br >
+    <div class="file-loading" >
+      <input id="file-0a" class="file" type="file" multiple
+             data-min-file-count="1" >
+    </div >
+    <br >
+    <button type="submit" class="btn btn-primary" >Submit</button >
+    <button type="reset" class="btn btn-default" >Reset</button >
+  </form >
+</div >
+</body >
+</html >
