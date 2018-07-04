@@ -616,14 +616,15 @@ Ext.define('Ext.ux.Combobox', {
     var me = this;
 
     if (me.queryMode === "remote") {
-      if (me.store.proxy.extraParams)
+      if (me.store.proxy.extraParams){
         Ext.apply(me.store.proxy.extraParams, {
           "searchParam": value
         });
-      else
+      } else{
         me.store.proxy.extraParams = {
           "searchParam": value
         };
+      }
       me.store.load();
 
       Ext.apply(me.store.proxy.extraParams, {
