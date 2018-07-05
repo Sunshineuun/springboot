@@ -15,6 +15,7 @@ import java.io.IOException;
 /**
  * 过滤器安全拦截器
  * 1. 拦截请求
+ *
  * @author qiushengming
  * @date 2018/7/1
  */
@@ -27,11 +28,13 @@ public class CustomFilterSecurityInterceptor
     private FilterInvocationSecurityMetadataSource securityMetadataSource;
 
     @Autowired
-    public void setMyAccessDecisionManager(CustomAccessDecisionManager accessDecisionManager) {
+    public void setMyAccessDecisionManager(
+        CustomAccessDecisionManager accessDecisionManager) {
         super.setAccessDecisionManager(accessDecisionManager);
     }
 
-    public void invoke(FilterInvocation fi) throws IOException, ServletException {
+    public void invoke(FilterInvocation fi)
+        throws IOException, ServletException {
         //fi里面有一个被拦截的url
         //里面调用MyInvocationSecurityMetadataSource的getAttributes(Object object)这个方法获取fi对应的所有权限
         //再调用MyAccessDecisionManager的 decide 方法来校验用户的权限是否足够
