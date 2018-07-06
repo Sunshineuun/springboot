@@ -3,34 +3,49 @@
 <head >
   <meta charset="UTF-8" >
   <title >登陆</title >
-  <style type="text/css">
+  <link type="text/css" rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.95.2/css/materialize.css"
+        media="screen,projection" >
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
 
-  </style>
 </head >
 <body >
-<div style="margin-top: 200px">
 
-  <form method="post" action="/login" th:action="@{/login}">
-    <div>
-      <div style="float: none; margin:auto">
-        <input id="username" name="username" type="text"  autofocus="">
-        <label for="username" >Username</label>
-      </div>
-    </div>
-    <div >
-      <div  style="float: none; margin:auto">
-        <input id="password" name="password" type="password" >
-        <label for="password" >Password</label>
-      </div>
-    </div>
-    <div >
-      <div  style="float: none; margin:auto">
-        <button  type="submit">Submit
-          <i ></i>
-        </button>
-      </div>
-    </div>
-  </form>
-</div>
+<script type="text/javascript"
+        src="https://code.jquery.com/jquery-2.1.1.min.js" ></script >
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.95.2/js/materialize.min.js" >
+</script >
+<div class="row" style="margin-top: 200px" >
+
+  <form class="col s12" method="post" th:action="@{/login}" action="/login">
+    <div class="row" >
+      <div class="input-field col s6" style="float: none; margin:auto" >
+        <input id="username" name="username" class="validate" autofocus=""
+               type="text" >
+        <label for="username" class="" >用户名</label >
+      </div >
+    </div >
+    <div class="row" >
+      <div class="input-field col s6" style="float: none; margin:auto" >
+        <input id="password" name="password" class="validate" type="password" >
+        <label for="password" >密码</label >
+      </div >
+    </div >
+    <div class="row" >
+      <div class="input-field col s6" style="float: none; margin:auto" >
+        <button class="btn waves-effect waves-light" type="submit" >登陆
+          <i class="mdi-content-send right" ></i >
+        </button >
+      </div >
+    </div >
+
+
+  </form >
+</div >
+
+<div class="hiddendiv common" ></div >
+
 </body >
 </html >
