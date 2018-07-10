@@ -6,10 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,28 +23,26 @@ import java.util.*;
  */
 @Service(value = "invocationSecurityMetadataSource")
 public class CustomInvocationSecurityMetadataSource
-    implements FilterInvocationSecurityMetadataSource {
+        implements FilterInvocationSecurityMetadataSource {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource(name = "permissionService")
     private PermissionService permissionService;
 
-    private Map<String, Collection<ConfigAttribute>> collectionMap = null;
+    private Map<String, Collection<ConfigAttribute>> collectionMap = new HashMap<>();
 
     /**
      * 加载权限表中所有权限
      */
-    private void loadResourceDefine(){
+    private void loadResourceDefine() {
         logger.debug("加载权限列表");
-
-        collectionMap = new HashMap<>();
 
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
         List<Permission> permissions = permissionService.getAll();
 
-        for(Permission permission : permissions) {
+        for (Permission permission : permissions) {
             array = new ArrayList<>();
             cfg = new SecurityConfig(permission.getName());
             // 此处只添加了用户的名字，其实还可以添加更多权限的信息，
@@ -66,8 +66,11 @@ public class CustomInvocationSecurityMetadataSource
      */
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object)
-        throws IllegalArgumentException {
-        if(collectionMap ==null) {
+            throws IllegalArgumentException {
+        // TODO 正式环境需要删除掉
+        // collectionMap.clear();
+
+        if (CollectionUtils.isEmpty(collectionMap)) {
             loadResourceDefine();
         }
         //object 中包含用户请求的request 信息

@@ -44,11 +44,11 @@ public class WebSecurityConfig
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             // 访问穿入参数的匹配规则，匹配上的地址，无需登录认证权限，都能访问
-            .antMatchers("/login").permitAll()
+            .antMatchers("/login", "/static/**").permitAll()
             //其他所有资源都需要认证，登陆后访问
             .anyRequest().authenticated()
             // 构建登陆 登陆页面 允许任何权限访问
-            .and().formLogin().loginPage("/forward/login").permitAll()
+            .and().formLogin().loginPage("/login").permitAll()
             .loginProcessingUrl("/login")
             //
             .successForwardUrl("/forward/index")
@@ -57,9 +57,9 @@ public class WebSecurityConfig
             // 登陆成功后的操作，传入方法
             .successHandler(new CustomAuthenticationSuccessHandler())
             // 构建登出界面，允许任何权限访问
-            .and().logout().logoutUrl("/error").permitAll().and()
+            .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").permitAll()
             // 登录后记住用户，下次自动登录,数据库中必须存在名为persistent_logins的表
-            .rememberMe()
+            .and().rememberMe()
             // 令牌的有效时间，单位秒
             .tokenValiditySeconds(100000);
         http.addFilterBefore(filterSecurityInterceptor,
