@@ -18,21 +18,26 @@
     {
       "name": "minnie.druid.loginUserName",
       "type": "java.lang.String",
-      "description": "Description for minnie.druid.loginUserName."
+      "description": "配置druid的用户名."
     },
     {
       "name": "minnie.druid.loginPassword",
       "type": "java.lang.String",
-      "description": "Description for minnie.druid.loginPassword."
+      "description": "配置druid的登陆密码."
     },
     {
       "name": "minnie.druid.allow",
       "type": "java.lang.String",
-      "description": "Description for minnie.druid.allow."
+      "description": "配置druid的白名单."
     },
     {
       "name": "minnie.druid.deny",
       "type": "java.lang.String",
-      "description": "Description for minnie.druid.deny."
+      "description": "配置druid的黑名单."
+    },
+    {
+      "name": "minnie.lucene.filepath",
+      "type": "java.lang.String",
+      "description": "配置lucene的路径."
     }
   ] }

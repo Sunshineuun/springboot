@@ -1,13 +1,13 @@
 package com.qiushengming;
 
-import com.qiushengming.utils.JackJson;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 public class Tests {
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+    public static void main(String[] args)
+        throws IOException, NoSuchAlgorithmException {
         /*File file = new File("D:/text.txt");
         FileOutputStream out = new FileOutputStream(file);
         int a = 0;
@@ -36,9 +36,12 @@ public class Tests {
         char c[] = {'h', 'e', 'l', 'l', 'o'};
         System.out.println(t.equals(c));*/
 
-        String s = "[{\"operator\":\"in\",\"value\":[\"1\"],\"property\":\"occupy\"}]";
+        /*String s = "[{\"operator\":\"in\",\"value\":[\"1\"],\"property\":\"occupy\"}]";
         List a = JackJson.fromJsonToObject(s, List.class);
 
-        System.out.println(a);
+        System.out.println(a);*/
+
+        BCryptPasswordEncoder password = new BCryptPasswordEncoder();
+        System.out.println(password.encode("admin"));
     }
 }

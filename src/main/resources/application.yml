@@ -10,10 +10,10 @@ logging:
     com.qiushengming.mapper: debug
     com.qiushengming: debug
     mapper: debug
-#  pattern:
-#    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%thread]){faint} %clr(%-40.40logger{39}){cyan} %L %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+  pattern:
+    console: "%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%thread]){faint} %clr(%-40.40logger{39}){cyan} %L %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
 #  file: log\springboot.log
-  config: classpath:logback-boot.xml
+#  config: classpath:logback-boot.xml
 
 # spring配置
 spring:
@@ -30,10 +30,10 @@ spring:
     static-path-pattern: /static/**
 #  thymeleaf:
 #    prefix: classpath:/templates
-  activemq:
-    broker-url: tcp://192.168.16.113:61616
-    user: admin
-    password: admin
+#  activemq:
+#    broker-url: tcp://192.168.16.113:61616
+#    user: admin
+#    password: admin
     pool:
       enabled: false
   jms:
@@ -77,9 +77,9 @@ spring:
       useGlobalDataSourceStat: true
   redis:
     database: 1
-    host: 120.77.247.147 #127.0.0.1 # 192.168.5.94
+    host: 192.168.5.94 #127.0.0.1 # 192.168.5.94
     port: 6379
-    password: minnie
+    password:
     jedis:
       pool:
         max-active: 8 # 连接池最大连接数（使用负数表示没有限制）
@@ -90,10 +90,15 @@ spring:
     timeout: 5000
 oralce:
     datasource:
-      url: jdbc:oracle:thin:@192.168.16.113:1521:sunshine
-      username: luun
-      password: luun # 192.168.16.113-123；localhost-minnie
-      driver-class-name: oracle.jdbc.driver.OracleDriver # com.mysql.jdbc.Driver
+      url: jdbc:mysql://120.77.247.147:3306/sunshine?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      username: root
+      password: 123
+      platform: mysql
+      driver-class-name: com.mysql.jdbc.Driver
+#      url: jdbc:oracle:thin:@192.168.16.113:1521:sunshine
+#      username: luun
+#      password: luun
+#      driver-class-name: oracle.jdbc.driver.OracleDriver
       type: com.alibaba.druid.pool.DruidDataSource
       # 下面为连接池的补充设置，应用到上面所有数据源中
       # 初始化大小，最小，最大
@@ -130,3 +135,5 @@ minnie:
     loginPassword: admin1
     allow: 192.168.16.118,192.168.16.113
     deny: 192.168.16.110
+  lucene:
+    filepath: .\lucene

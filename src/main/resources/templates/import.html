@@ -3,7 +3,6 @@
 <head >
   <meta charset="UTF-8" >
   <title >数据导入</title >
-  <link href="/static/bootstrap/css/fileinput-rtl.css" type="text/css" >
   <link href="/static/bootstrap/css/fileinput.css" media="all"
         rel="stylesheet" type="text/css" >
   <link href="/static/bootstrap/css/theme.css" media="all" rel="stylesheet"
@@ -24,21 +23,16 @@
           type="text/javascript" ></script >
 </head >
 <body >
-<div class="ontainer kv-main" >
-  <form method="post" th:action="@{/importData/importService/importFile}"
-        enctype="multipart/form-data" >
-    <!--<div class="file-loading" >
-      <input id="kv-explorer" type="file" multiple >
-    </div >-->
-    <br >
-    <div class="file-loading" >
-      <input id="file-0a" class="file" type="file" multiple
-             data-min-file-count="1" >
-    </div >
-    <br >
-    <button type="submit" class="btn btn-primary" >Submit</button >
-    <button type="reset" class="btn btn-default" >Reset</button >
-  </form >
-</div >
+  <label class="control-label" >选择文件</label >
+  <div class="file-loading" >
+    <input id="input-pt-br" name="inputptbr[]" type="file" multiple >
+  </div >
+  <script >
+    $("#input-pt-br").fileinput({
+      language: "pt-BR",
+      uploadUrl: "/importData/diseaseInfoService/importFile"
+      //allowedFileExtensions: ["jpg", "png", "gif"]
+    });
+  </script >
 </body >
 </html >

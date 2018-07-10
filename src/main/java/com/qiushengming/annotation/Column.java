@@ -19,4 +19,6 @@ public @interface Column {
     boolean isUpdate() default true;
 
     String resultHandler() default "";
+
+    String chineseName() default "";
 }

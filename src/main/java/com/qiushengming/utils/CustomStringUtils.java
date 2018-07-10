@@ -46,12 +46,51 @@ public class CustomStringUtils {
 
     /**
      * 是否为中文
+     *
      * @param s String
      * @return true or false
      */
     public static boolean isChinese(String s) {
         return s.matches("^[\\u4e00-\\u9fa5]*");
     }
+
+    /***
+     * 驼峰命名转为下划线命名
+     *
+     * @param para 驼峰命名的字符串
+     */
+    public static String humpToUnderline(String para) {
+        StringBuilder sb = new StringBuilder(para);
+        //定位
+        int temp = 0;
+        for (int i = 0; i < para.length(); i++) {
+            if (Character.isUpperCase(para.charAt(i))) {
+                sb.insert(i + temp, "_");
+                temp += 1;
+            }
+        }
+        return sb.toString().toUpperCase();
+    }
+
+    /***
+     * 下划线命名转为驼峰命名
+     *
+     * @param para 下划线命名的字符串
+     */
+    public static String underlineToHump(String para) {
+        StringBuilder sb = new StringBuilder();
+        String a[] = para.split("_");
+        for (String s : a) {
+            if (sb.length() == 0) {
+                sb.append(s.toLowerCase());
+            } else {
+                sb.append(s.substring(0, 1).toUpperCase());
+                sb.append(s.substring(1).toLowerCase());
+            }
+        }
+        return sb.toString();
+    }
+
 
     public static void main(String[] args) {
     }
