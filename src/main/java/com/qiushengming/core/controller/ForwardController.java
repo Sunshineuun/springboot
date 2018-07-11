@@ -24,7 +24,7 @@ public class ForwardController extends BaseController {
         String contextPath = request.getContextPath();
         String requestURI = request.getRequestURI();
 
-        logger.info("当前请求客户机的IP：{}", WebUtils.getIpAddr(request));
+        logger.info("当前{}请求客户机的IP：{}", getCurrUserName(), WebUtils.getIpAddr(request));
 
         logger.info("当前请求的基地址：{}，uri：{}", contextPath, requestURI);
 

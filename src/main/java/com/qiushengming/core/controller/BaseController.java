@@ -8,6 +8,8 @@ import com.qiushengming.utils.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -181,7 +183,12 @@ public class BaseController {
         binder.registerCustomEditor(List.class, listEditor);
     }
 
-    /*public User getCurrUser() {
-        return (User) SecurityUtils.getSubject().getPrincipal();
-    }*/
+    public String getCurrUserName() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails)principal).getUsername();
+        } else {
+            return principal.toString();
+        }
+    }
 }
