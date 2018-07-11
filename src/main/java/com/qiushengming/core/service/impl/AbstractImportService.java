@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,15 +18,15 @@ import java.util.Map;
  * @date 2018/7/3
  */
 public abstract class AbstractImportService<T extends BaseEntity>
-    extends AbstractManagementService<T>
-    implements ImportService {
+        extends AbstractManagementService<T>
+        implements ImportService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public synchronized void importExcel(InputStream is, Map<String, Object> params) {
         List<Map<String, Object>> records =
-            readImportRecordsFromExcel(is, params);
+                readImportRecordsFromExcel(is, params);
     }
 
     @Override
@@ -34,13 +35,13 @@ public abstract class AbstractImportService<T extends BaseEntity>
     }
 
     protected List<Map<String, Object>> readImportRecordsFromExcel(
-        InputStream is, Map<String, Object> params) {
+            InputStream is, Map<String, Object> params) {
         List<Map<String, Object>> result = new ArrayList<>();
         List<String[]> csvData;
         try {
             csvData = XlsxCovertCsvReader.readerExcel(is,
-                getMinColumns(),
-                getSheetName());
+                    getMinColumns(),
+                    getSheetName());
         } catch (Exception e) {
             logger.error("{}", e);
             throw new SystemException("导入模版错误，请点击‘模版下载’下载导入模版！");
@@ -52,15 +53,15 @@ public abstract class AbstractImportService<T extends BaseEntity>
         }
 
         logger.debug("数据共计{}条", csvData.size());
+
+        String[] title = csvData.get(0);
+        csvData.remove(0);
         for (String[] s : csvData) {
-            for (String s1 : s) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    logger.error("{}", e);
-                }
-                logger.debug(s1);
+            Map<String, Object> map = new LinkedHashMap<>();
+            for (int i = 0; i < title.length; i++) {
+                map.put(title[i], s[i]);
             }
+            result.add(map);
         }
         return result;
     }

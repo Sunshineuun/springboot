@@ -42,7 +42,7 @@ public abstract class AbstractQueryService<T extends BaseEntity>
         return dao;
     }
 
-    private Class<T> getEntityClass() {
+    protected Class<T> getEntityClass() {
         if (entityClass == null) {
             entityClass =
                 GenericsUtils.getSuperClassGenricType(this.getClass());
