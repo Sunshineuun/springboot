@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -545,11 +546,13 @@ public class XlsxCovertCsvReader {
 
     public static void main(String[] args) throws Exception {
         String path = "D:\\test.xlsx";
-        int minColumns = 5;
-        String sheetName = "A";
+        int minColumns = 8;
+        String sheetName = "Sheet1";
         List<String[]> result =
             XlsxCovertCsvReader.readerExcel(path, minColumns, sheetName);
-        System.out.println(result);
+        for(String[] s  : result){
+            System.out.println(Arrays.asList(s).toString());
+        }
     }
 }
 
