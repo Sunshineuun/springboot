@@ -87,6 +87,8 @@ public class CreateEntity {
             "navGrid: {\n" + "      add: authc.add,\n" + "      edit: authc.edit,\n" + "      logicDel: authc.del,\n"
                 + "      clinicalsubmit: authc.edit,\n" + "      search: false}");
         lines.add("}");
+        lines.add(");\n");
+        lines.add("});");
 
         writeFile(lines, serviceName + ".js");
     }
