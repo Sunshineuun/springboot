@@ -4,10 +4,13 @@ import com.qiushengming.annotation.Column;
 import com.qiushengming.annotation.Exclude;
 import com.qiushengming.annotation.Id;
 import com.qiushengming.annotation.Table;
+import com.qiushengming.exception.SystemException;
 import com.qiushengming.mybatis.support.ClassMap;
+import com.qiushengming.utils.CustomStringUtils;
 import com.qiushengming.utils.ReflectionUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.JdbcType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -27,7 +30,7 @@ public final class AnnotationConfiguration {
     private final char Z = 'Z';
     private final Configuration configuration;
     private static final Map<Class<?>, ClassMap> CLASS_MAP =
-        new ConcurrentHashMap<>();
+            new ConcurrentHashMap<>();
 
     AnnotationConfiguration(Configuration configuration) {
         this.configuration = configuration;
@@ -40,6 +43,9 @@ public final class AnnotationConfiguration {
     /**
      * 1. 如果属性的get or set 方法上没有增加<code>Column</code> or <code>Id</code>注解， <br>
      * 则会将属性本身的名字作为与表的映射名称
+     * 2. TODO 默认值设置
+     * 3. TODO VARCHAR，int类型自定义长度设置
+     *
      * @param clazz 类
      */
     private void parseClassMap(Class<?> clazz) {
@@ -47,28 +53,36 @@ public final class AnnotationConfiguration {
 
         List<Field> fields = ReflectionUtils.getFields(clazz);
 
+        // CREATE TABLE IF NOT EXISTS目前只支持MySQL的，oracle后续兼容
+        StringBuilder createSql = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
+        createSql.append(table.value()).append(" ");
+
         String readMethodName;
         String writeMethodName;
         Column column;
         Id id;
 
         ClassMap classMap = new ClassMap(clazz,
-            table.value(),
-            table.resultMapId(),
-            table.selectSql());
+                table.value(),
+                table.resultMapId(),
+                table.selectSql());
 
         for (Field field : fields) {
             column = null;
             id = null;
 
             readMethodName =
-                getReadMethodName(field.getName(), field.getType());
+                    getReadMethodName(field.getName(), field.getType());
             Method readMethod =
-                MethodUtils.getAccessibleMethod(clazz, readMethodName);
+                    MethodUtils.getAccessibleMethod(clazz, readMethodName);
 
-            if (readMethod == null) { continue; }
+            if (readMethod == null) {
+                continue;
+            }
 
-            if (readMethod.isAnnotationPresent(Exclude.class)) { continue; }
+            if (readMethod.isAnnotationPresent(Exclude.class)) {
+                continue;
+            }
 
             if (readMethod.isAnnotationPresent(Column.class)) {
                 column = readMethod.getAnnotation(Column.class);
@@ -80,12 +94,16 @@ public final class AnnotationConfiguration {
 
             writeMethodName = getWriteMethodName(field.getName());
             Method writeMethod = MethodUtils.getAccessibleMethod(clazz,
-                writeMethodName,
-                field.getType());
+                    writeMethodName,
+                    field.getType());
 
-            if (writeMethod == null) { continue; }
+            if (writeMethod == null) {
+                continue;
+            }
 
-            if (writeMethod.isAnnotationPresent(Exclude.class)) { continue; }
+            if (writeMethod.isAnnotationPresent(Exclude.class)) {
+                continue;
+            }
 
             if (writeMethod.isAnnotationPresent(Column.class)) {
                 column = writeMethod.getAnnotation(Column.class);
@@ -97,28 +115,51 @@ public final class AnnotationConfiguration {
 
             if (id != null) {
                 ClassMap.Property property = classMap.new Property(field.getName(),
-                    field.getType(),
-                    id.value().toUpperCase(),
-                    true,
-                    true);
+                        field.getType(),
+                        id.value().toUpperCase(),
+                        true,
+                        true);
                 classMap.addIdProperty(property);
-            }else if (column != null) {
+
+                if (id.jdbcType() != JdbcType.VARCHAR) {
+                    // 当前(18年7月22日)只处理VARCHAR类型，后续拓展
+                    throw new SystemException("期望类型为VARCHAR,实际类型为" + id.jdbcType());
+                }
+
+                createSql.append(id.value().toUpperCase())
+                        .append(" ")
+                        .append(id.jdbcType())
+                        .append("(255) DEFAULT '' PRIMARY KEY NOT NULL,");
+            } else if (column != null) {
                 ClassMap.Property property = classMap.new Property(field.getName(),
-                    field.getType(),
-                    column.value().toUpperCase(),
-                    column.isAdd(),
-                    column.isUpdate());
+                        field.getType(),
+                        column.value().toUpperCase(),
+                        column.isAdd(),
+                        column.isUpdate());
                 classMap.addProperty(property);
-            }else {
+
+                createSql.append(column.value().toUpperCase())
+                        .append(" ")
+                        .append(column.jdbcType())
+                        .append("(4000) DEFAULT '',");
+            } else {
                 // column == null && id == null
                 ClassMap.Property property = classMap.new Property(field.getName(),
-                    field.getType(),
-                    field.getName().toUpperCase(),
-                    true,
-                    true);
+                        field.getType(),
+                        CustomStringUtils.humpToUnderline(field.getName()),
+                        true,
+                        true);
                 classMap.addProperty(property);
+
+                createSql.append(CustomStringUtils.humpToUnderline(field.getName()))
+                        .append(" ")
+                        .append("VARCHAR")
+                        .append("(4000) DEFAULT '',");
             }
         }
+
+        classMap.setCreateSql(createSql.toString());
+
         CLASS_MAP.put(clazz, classMap);
     }
 
@@ -163,7 +204,7 @@ public final class AnnotationConfiguration {
             sb.append(c1).append(propertyName.substring(1));
         } else {
             sb.append(Character.toUpperCase(c1))
-                .append(propertyName.substring(1));
+                    .append(propertyName.substring(1));
         }
         return sb.toString();
     }
@@ -178,8 +219,8 @@ public final class AnnotationConfiguration {
             sb.append("set").append(c1).append(propertyName.substring(1));
         } else {
             sb.append("set")
-                .append(Character.toUpperCase(c1))
-                .append(propertyName.substring(1));
+                    .append(Character.toUpperCase(c1))
+                    .append(propertyName.substring(1));
         }
         return sb.toString();
     }

@@ -1,7 +1,9 @@
 package com.qiushengming.core.controller;
 
+import com.qiushengming.core.service.FileService;
 import com.qiushengming.core.service.ImportService;
 import com.qiushengming.entity.code.MinNieResponse;
+import com.qiushengming.exception.SystemException;
 import com.qiushengming.utils.ApplicationContextUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -71,6 +73,23 @@ public class ImportDataController
 
         return new MinNieResponse(true, "", null);
     }
+
+    @RequestMapping("/importFile")
+    public MinNieResponse importFile(MultipartHttpServletRequest request) {
+        Map<String, Object> params = this.getRequestParameters(request);
+        Iterator<String> iterator = request.getFileNames();
+        FileService fileService = ApplicationContextUtils.getBean("fileService");
+        while (iterator.hasNext()) {
+            MultipartFile multipart = request.getFile(iterator.next());
+            try {
+                fileService.addFile(multipart);
+            } catch (IOException e) {
+                throw new SystemException("IO异常，文件读取失败");
+            }
+        }
+        return new MinNieResponse(true, "", null);
+    }
+
 
     /**
      * 下载文件

@@ -32,7 +32,6 @@ public class MinnieDaoImpl
         return session.getSqlSession(dialect);
     }
 
-
     /**
      * 依据ID查询
      *

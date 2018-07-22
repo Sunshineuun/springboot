@@ -44,7 +44,7 @@ public class WebSecurityConfig
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             // 访问穿入参数的匹配规则，匹配上的地址，无需登录认证权限，都能访问
-            .antMatchers("/login", "/static/**").permitAll()
+            .antMatchers("/login", "/static/**", "/importData/**").permitAll()
             //其他所有资源都需要认证，登陆后访问
             .anyRequest().authenticated()
             // 构建登陆 登陆页面 允许任何权限访问

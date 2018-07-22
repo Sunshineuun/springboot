@@ -38,6 +38,10 @@ public final class ClassMap {
      */
     private String deleteSql;
     /**
+     * 创建表的SQL
+     */
+    private String createSql;
+    /**
      * TODO
      */
     private Class<?> type;
@@ -243,6 +247,14 @@ public final class ClassMap {
 
     public List<Property> getProperties() {
         return properties;
+    }
+
+    public String getCreateSql() {
+        return createSql;
+    }
+
+    public void setCreateSql(String createSql) {
+        this.createSql = createSql;
     }
 
     public class Property {
