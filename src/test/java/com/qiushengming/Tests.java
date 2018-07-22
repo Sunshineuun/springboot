@@ -41,7 +41,7 @@ public class Tests {
 
         System.out.println(a);*/
 
-        BCryptPasswordEncoder password = new BCryptPasswordEncoder();
-        System.out.println(password.encode("admin"));
+        /*BCryptPasswordEncoder password = new BCryptPasswordEncoder();
+        System.out.println(password.encode("admin"));*/
     }
 }
