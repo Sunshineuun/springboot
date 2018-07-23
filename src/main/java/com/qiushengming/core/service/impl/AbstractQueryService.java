@@ -31,7 +31,7 @@ import static com.qiushengming.utils.ReflectionUtils.wrapProperty;
  * @date 2018/4/14
  */
 public abstract class AbstractQueryService<T extends BaseEntity>
-        implements QueryService<T>, PagingService {
+        implements QueryService<T>, PagingService, InitializingBean {
 
     /**
      * 日志记录
@@ -43,17 +43,7 @@ public abstract class AbstractQueryService<T extends BaseEntity>
 
     private Class entityClass;
 
-    {
-        // 先查看数据库是否存在表
-        /*
-            if not exists 当表存在的时候不执行SQL， mysql的方式
-            create table if not exists sys_authority(name text,age int(2),gender char(1));
-         */
-        initTable();
-
-    }
-
-    private void initTable() {
+    protected void initTable() {
         ClassMap classMap = AnnotationConfiguration.getClassMap(getEntityClass());
         if (classMap == null) {
             return;
@@ -116,6 +106,16 @@ public abstract class AbstractQueryService<T extends BaseEntity>
                 getSearchSql(params),
                 params,
                 page);
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        // 先查看数据库是否存在表
+        /*
+            if not exists 当表存在的时候不执行SQL， mysql的方式
+            create table if not exists sys_authority(name text,age int(2),gender char(1));
+         */
+        initTable();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

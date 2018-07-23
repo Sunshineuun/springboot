@@ -2,6 +2,7 @@ package com.qiushengming.entity;
 
 import com.qiushengming.annotation.Column;
 import com.qiushengming.annotation.Table;
+import com.qiushengming.enums.MySqlDefault;
 import org.apache.ibatis.type.JdbcType;
 
 import java.util.Date;
@@ -65,7 +66,7 @@ public class BookHistory
         this.isEnable = isEnable;
     }
 
-    @Column(value = "START_DATE", jdbcType = JdbcType.TIMESTAMP)
+    @Column(value = "START_DATE", jdbcType = JdbcType.TIMESTAMP, defaultValue = MySqlDefault.CURRENT_TIMESTAMP)
     public Date getStartDate() {
         return startDate;
     }

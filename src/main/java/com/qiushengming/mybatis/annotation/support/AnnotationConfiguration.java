@@ -4,6 +4,7 @@ import com.qiushengming.annotation.Column;
 import com.qiushengming.annotation.Exclude;
 import com.qiushengming.annotation.Id;
 import com.qiushengming.annotation.Table;
+import com.qiushengming.enums.MySqlDefault;
 import com.qiushengming.exception.SystemException;
 import com.qiushengming.mybatis.support.ClassMap;
 import com.qiushengming.utils.CustomStringUtils;
@@ -54,8 +55,7 @@ public final class AnnotationConfiguration {
         List<Field> fields = ReflectionUtils.getFields(clazz);
 
         // CREATE TABLE IF NOT EXISTS目前只支持MySQL的，oracle后续兼容
-        StringBuilder createSql = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
-        createSql.append(table.value()).append(" ");
+        List<String> columns = new ArrayList<>();
 
         String readMethodName;
         String writeMethodName;
@@ -126,10 +126,7 @@ public final class AnnotationConfiguration {
                     throw new SystemException("期望类型为VARCHAR,实际类型为" + id.jdbcType());
                 }
 
-                createSql.append(id.value().toUpperCase())
-                        .append(" ")
-                        .append(id.jdbcType())
-                        .append("(255) DEFAULT '' PRIMARY KEY NOT NULL,");
+                columns.add(id.value().toUpperCase() + " " + id.jdbcType() + "(255) DEFAULT '' PRIMARY KEY NOT NULL");
             } else if (column != null) {
                 ClassMap.Property property = classMap.new Property(field.getName(),
                         field.getType(),
@@ -138,10 +135,30 @@ public final class AnnotationConfiguration {
                         column.isUpdate());
                 classMap.addProperty(property);
 
-                createSql.append(column.value().toUpperCase())
-                        .append(" ")
-                        .append(column.jdbcType())
-                        .append("(4000) DEFAULT '',");
+                switch (column.jdbcType()) {
+                    case VARCHAR:
+                        columns.add(column.value().toUpperCase()
+                                + " "
+                                + column.jdbcType()
+                                + "(1500) DEFAULT "
+                                + column.defaultValue().getValue());
+                        break;
+                    case TIMESTAMP:
+                        String c = column.value().toUpperCase() + " " + column.jdbcType();
+                        switch (column.defaultValue()) {
+                            case BLANK:
+                                columns.add(c);
+                                break;
+                            case CURRENT_TIMESTAMP:
+                                columns.add(c + " NOT NULL DEFAULT " + column.defaultValue().getValue());
+                                break;
+                            default:
+                                throw new SystemException("组装建表SQL，发现未定义类型！！！");
+                        }
+                        break;
+                    default:
+                        throw new SystemException("组装建表SQL，发现未定义类型！！！");
+                }
             } else {
                 // column == null && id == null
                 ClassMap.Property property = classMap.new Property(field.getName(),
@@ -151,13 +168,14 @@ public final class AnnotationConfiguration {
                         true);
                 classMap.addProperty(property);
 
-                createSql.append(CustomStringUtils.humpToUnderline(field.getName()))
-                        .append(" ")
-                        .append("VARCHAR")
-                        .append("(4000) DEFAULT '',");
+                columns.add(CustomStringUtils.humpToUnderline(field.getName()) + " " + "VARCHAR(1500) DEFAULT ''");
             }
         }
 
+        StringBuilder createSql = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
+        createSql.append(table.value()).append(" (");
+        createSql.append(String.join(",", columns));
+        createSql.append(" )");
         classMap.setCreateSql(createSql.toString());
 
         CLASS_MAP.put(clazz, classMap);

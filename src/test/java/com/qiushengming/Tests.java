@@ -1,9 +1,12 @@
 package com.qiushengming;
 
+import org.apache.ibatis.type.JdbcType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tests {
     public static void main(String[] args)
@@ -43,5 +46,13 @@ public class Tests {
 
         /*BCryptPasswordEncoder password = new BCryptPasswordEncoder();
         System.out.println(password.encode("admin"));*/
+
+        System.out.println(JdbcType.VARCHAR);
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            list.add(String.valueOf(i));
+        }
+        System.out.println(String.join(",", list));
+
     }
 }

@@ -2,6 +2,7 @@ package com.qiushengming.entity;
 
 import com.qiushengming.annotation.Column;
 import com.qiushengming.annotation.Table;
+import com.qiushengming.enums.MySqlDefault;
 import org.apache.ibatis.type.JdbcType;
 
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.Date;
  */
 @Table(value = "SP_DATA_LOG", resultMapId = "DataLog")
 public class DataLog
-    extends BaseEntity {
+        extends BaseEntity {
 
     /**
      * 实体
@@ -55,8 +56,8 @@ public class DataLog
     private String method;
 
     public DataLog(String entity, String targetId,
-        Class<? extends BaseEntity> targetClass, String by, String type,
-        String ip, String method) {
+                   Class<? extends BaseEntity> targetClass, String by, String type,
+                   String ip, String method) {
         this.entity = entity;
         this.targetId = targetId;
         this.targetClass = targetClass.getName();
@@ -93,8 +94,9 @@ public class DataLog
     }
 
     @Column(value = "CREATE_DATE",
-        isUpdate = false,
-        jdbcType = JdbcType.TIMESTAMP)
+            isUpdate = false,
+            jdbcType = JdbcType.TIMESTAMP,
+            defaultValue = MySqlDefault.CURRENT_TIMESTAMP)
     public Date getCreateDate() {
         return createDate;
     }

@@ -10,6 +10,7 @@ logging:
     com.qiushengming.mapper: debug
     com.qiushengming: debug
     mapper: debug
+    org.springframework.security: debug
   pattern:
     console: "%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%thread]){faint} %clr(%-40.40logger{39}){cyan} %L %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
 #  file: log\springboot.log
@@ -77,9 +78,9 @@ spring:
       useGlobalDataSourceStat: true
   redis:
     database: 1
-    host: 192.168.5.94 #127.0.0.1 # 192.168.5.94
+    host: 120.77.247.147 #127.0.0.1 # 192.168.5.94
     port: 6379
-    password:
+    password: minnie
     jedis:
       pool:
         max-active: 8 # 连接池最大连接数（使用负数表示没有限制）

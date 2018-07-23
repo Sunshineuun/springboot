@@ -1,5 +1,6 @@
 package com.qiushengming.annotation;
 
+import com.qiushengming.enums.MySqlDefault;
 import org.apache.ibatis.type.JdbcType;
 
 import java.lang.annotation.ElementType;
@@ -21,4 +22,6 @@ public @interface Column {
     String resultHandler() default "";
 
     String chineseName() default "";
+
+    MySqlDefault defaultValue() default MySqlDefault.BLANK;
 }
