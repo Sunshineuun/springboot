@@ -89,6 +89,10 @@ spring:
         min-idle: 0 # 连接池中最小空闲链接
     # 连接超时时间（毫秒数）
     timeout: 5000
+  servlet:
+    multipart:
+      max-file-size: 10Mb
+      max-request-size: 100Mb
 oralce:
     datasource:
       url: jdbc:mysql://120.77.247.147:3306/sunshine?useUnicode=true&characterEncoding=utf-8&useSSL=false
