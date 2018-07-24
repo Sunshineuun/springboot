@@ -219,7 +219,7 @@ public abstract class AbstractQueryService<T extends BaseEntity>
       if (StringUtils.isEmpty(table.selectSql())) {
         return "SELECT COUNT(1) FROM " + table.value();
       } else {
-        return "SELECT COUNT(1) FROM (" + table.selectSql() + ")";
+        return "SELECT COUNT(1) FROM (" + table.selectSql() + ") T ";
       }
     } else {
       throw new SystemException(clazz.getName() + " 没有添加  Table 注解");
