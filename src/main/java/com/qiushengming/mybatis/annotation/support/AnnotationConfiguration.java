@@ -171,10 +171,7 @@ public final class AnnotationConfiguration {
       }
     }
 
-    String createSql = "CREATE TABLE IF NOT EXISTS " + table.value() + " ("
-        + String.join(",", columns)
-        + " )";
-    classMap.setCreateSql(createSql);
+    classMap.setCreateSql(getMySqlCreateSql(table, columns));
 
     CLASS_MAP.put(clazz, classMap);
   }
@@ -238,5 +235,11 @@ public final class AnnotationConfiguration {
           .append(propertyName.substring(1));
     }
     return sb.toString();
+  }
+
+  private String getMySqlCreateSql(Table table, List<String> columns) {
+    return "CREATE TABLE IF NOT EXISTS " + table.value() + " ("
+        + String.join(",", columns)
+        + " ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
   }
 }
