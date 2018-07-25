@@ -1,11 +1,11 @@
 package com.qiushengming.service.impl;
 
 import com.qiushengming.core.service.impl.AbstractManagementService;
-import com.qiushengming.service.FileService;
 import com.qiushengming.entity.FileInfo;
 import com.qiushengming.entity.code.MinNieResponse;
 import com.qiushengming.exception.SystemException;
 import com.qiushengming.mybatis.support.Criteria;
+import com.qiushengming.service.FileService;
 import com.qiushengming.utils.DateFormat;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -26,7 +25,17 @@ public class FileServiceImpl
   /**
    * . 获取classpath路径： ResourceUtils.getURL("classpath:").getPath()
    */
-  private final String root = ResourceUtils.getURL("classpath:").getPath() + "file";
+  private final String root = "C://springboot//file//";
+
+  {
+    File rootDir = new File(root);
+    if (!rootDir.exists()) {
+      boolean state = rootDir.mkdir();
+      log.debug("文件存储根目录创建成功：{}", state);
+    } else {
+      log.debug("文件存储根目录已存在。");
+    }
+  }
 
   public FileServiceImpl() throws FileNotFoundException {
   }
