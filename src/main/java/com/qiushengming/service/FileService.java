@@ -1,6 +1,8 @@
-package com.qiushengming.core.service;
+package com.qiushengming.service;
 
-import com.qiushengming.entity.code.FileInfo;
+import com.qiushengming.core.service.ManagementService;
+import com.qiushengming.entity.FileInfo;
+import com.qiushengming.entity.code.MinNieResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,5 +19,5 @@ public interface FileService
      * @param multipart {@link MultipartFile}
      * @return 存储成功-true；存储失败-false。
      */
-    boolean addFile(MultipartFile multipart) throws IOException;
+    MinNieResponse addFile(MultipartFile multipart) throws IOException;
 }

@@ -8,9 +8,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Table {
-    String value();
 
-    String resultMapId();
+  String value();
 
-    String selectSql() default "";
+  String resultMapId();
+
+  String selectSql() default "";
+
+  boolean isCreateTable() default true;
 }
