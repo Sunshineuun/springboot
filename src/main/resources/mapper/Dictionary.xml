@@ -1,21 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="DictionaryMapper">
 
-    <!-- <cache type="com.winning.kbms.core.cache.MybatisRedisCache" eviction="LRU"
-        flushInterval="6000000" size="5000" readOnly="false"/> -->
+  <!-- <cache type="com.winning.kbms.core.cache.MybatisRedisCache" eviction="LRU"
+      flushInterval="6000000" size="5000" readOnly="false"/> -->
 
-    <!-- 数据字典根据字典代码查询具体值 -->
-    <select id="getDictionaryByTypeCode"
-            parameterType="java.lang.String" resultType="hashmap">
-        SELECT
-            T2.VALUE VALUE,
-            T2.NAME  LABEL
-        FROM
-            DICTIONARY T2
-        WHERE
-            T2.TYPE_CODE = #{typeCode,jdbcType=VARCHAR}
-        ORDER BY VIEW_ORDER
-    </select>
+  <!-- 数据字典根据字典代码查询具体值 -->
+  <select id="getDictionaryByTypeCode"
+    parameterType="java.lang.String" resultType="hashmap">
+    SELECT
+      T2.VALUE VALUE,
+      T2.NAME  LABEL
+    FROM
+      DICTIONARY T2
+    WHERE
+      T2.TYPE_CODE = #{typeCode,jdbcType=VARCHAR}
+    ORDER BY VIEW_ORDER
+  </select>
+
+  <select id="findBooks" parameterType="hashmap"
+    resultType="hashmap">
+    SELECT NAME LABEL, ID VALUE
+    FROM
+    BOOK WHERE 1=1
+    <if test="searchParam != 'all' and searchParam != '' and searchParam != null">
+      AND (
+        ID = #{searchParam}
+        OR
+        NAME LIKE CONCAT(CONCAT('%',#{searchParam}),'%')
+      )
+    </if>
+  </select>
+
 </mapper>
